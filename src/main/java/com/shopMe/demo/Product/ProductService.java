@@ -159,7 +159,7 @@ public class ProductService {
                 p.getAddress().getStreetOrCity(sortField))))
             .collect(Collectors.toList());
         if (sort.equals("desc")) {
-          finalList = Lists.reverse(listWithKeyword.getContent());
+          finalList = Lists.reverse(finalList);
         }
       }
     } else {
@@ -175,7 +175,7 @@ public class ProductService {
                 p.getAddress().getStreetOrCity(sortField))))
             .collect(Collectors.toList());
         if (sort.equals("desc")) {
-          finalList = Lists.reverse(listWithNoKeyword.getContent());
+          finalList = Lists.reverse(finalList);
         }
         return new PageImpl<>(finalList, pageable, totalProduct);
       }
