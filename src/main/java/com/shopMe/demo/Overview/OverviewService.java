@@ -217,13 +217,15 @@ public class OverviewService {
     return 1L;
   }
 
-  public Map<Product, Long> getProductHired(String sort, Date date1, Date date2) {
+  public OverviewProductDto getProductHired(String sort, Date date1, Date date2, Integer page,
+      Integer dataPerPage) {
     List<OrderDetail> listDetail;
     List<Product> listProduct = (List<Product>) productRepository.findAll();
-    Map<Product, Long> map;
 
+    final Map<Product, Long> map;
+    final Map<Product, Long> finalMap;
+    int total = 0;
     listDetail = orderDetailRepository.findAllByDate(date1, date2);
-    System.out.println(listDetail.size());
     map = listDetail.stream()
         .filter(orderDetail -> orderDetail.getExpiredDate() != null)
         .collect(Collectors.groupingBy(OrderDetail::getProduct, Collectors.counting()));
@@ -232,19 +234,24 @@ public class OverviewService {
         map.put(product, 0L);
       }
     });
-    map.forEach((product, aLong) -> System.out.println(product.getName() + " " + aLong));
 
+    total = map.size();
     if (sort.equals("asc")) {
-      return map.entrySet().stream()
+      finalMap = map.entrySet().stream()
           .sorted(Map.Entry.comparingByValue())
+          .skip((long) (page - 1) * dataPerPage)
+          .limit(dataPerPage)
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
               (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     } else {
-      return map.entrySet().stream()
+      finalMap = map.entrySet().stream()
           .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+          .skip((long) (page - 1) * dataPerPage)
+          .limit(dataPerPage)
           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
               (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
+    return new OverviewProductDto(finalMap, total, (total + dataPerPage - 1) / dataPerPage, page);
   }
 
 

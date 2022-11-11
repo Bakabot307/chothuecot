@@ -227,15 +227,16 @@ public class Product {
 
   @Override
   public String toString() {
-    return "{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", price=" + price +
-        ", status=" + status;
-
+    return '{' +
+        "\"id\":" + id +
+        ", \"name\":\"" + name + '\"' +
+        ", \"description\":\"" + description + '\"' +
+        ", \"price\":" + price +
+        ", \"status\":\"" + status + '\"' +
+        '}';
 
   }
+
 
   public Category getCategory() {
     return category;

@@ -1,6 +1,5 @@
 package com.shopMe.demo.Overview;
 
-import com.shopMe.demo.Product.Product;
 import com.shopMe.demo.Product.ProductStatus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,13 +64,16 @@ public class OverviewController {
   @GetMapping("/admin/overview/time_product_hired")
   public ResponseEntity<?> timeProductHired(@RequestParam String sort,
       @RequestParam String date1,
-      @RequestParam String date2) throws ParseException {
+      @RequestParam String date2,
+      @RequestParam Integer page,
+      @RequestParam Integer dataPerPage
+  ) throws ParseException {
 
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     System.out.println(format.parse(date1));
     System.out.println(format.parse(date2));
-    Map<Product, Long> test = overviewService.getProductHired(sort, format.parse(date1),
-        format.parse(date2));
+    OverviewProductDto test = overviewService.getProductHired(sort, format.parse(date1),
+        format.parse(date2), page, dataPerPage);
     return new ResponseEntity<>(test, HttpStatus.OK);
   }
 
