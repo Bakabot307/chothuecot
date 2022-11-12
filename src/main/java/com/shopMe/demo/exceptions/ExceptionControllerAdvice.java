@@ -31,5 +31,11 @@ public class ExceptionControllerAdvice {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(value = IllegalStateException.class)
+  public final ResponseEntity<String> IllegalStateException(
+      IllegalStateException exception) {
+    return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
 
 }
