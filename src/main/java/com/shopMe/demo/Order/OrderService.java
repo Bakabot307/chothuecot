@@ -397,4 +397,48 @@ public class OrderService {
     Notification notification2 = notificationService.addNotification2(notification);
     simpMessagingTemplate.convertAndSend("/notification/public", notification2);
   }
+
+//  public Order preOrder(User user, List<CartItem> cartItems) {
+//    Order order = new Order();
+//    Date today = new Date();
+//
+//    order.setOrderTime(today);
+//    order.setUser(user);
+//    order.setQuantity(cartItems.size());
+//
+//    order.setOrderCode(generateOrderCode(user.getId(), "O"));
+//    Set<OrderDetail> orderDetails = order.getOrderDetail();
+//    for (CartItem cartItem : cartItems) {
+//      Product product = cartItem.getProduct();
+//      OrderDetail orderDetail = new OrderDetail();
+//      orderDetail.setOrders(order);
+//      orderDetail.setProduct(product);
+//      orderDetail.setMonth(cartItem.getMonth());
+//      if (product.getExpiredDate() == null) {
+//        orderDetail.setExpiredDate(Helper.PlusMonth(today, cartItem.getMonth()));
+//        orderDetail.setStartDate(today);
+//      } else {
+//        orderDetail.setExpiredDate(Helper.PlusMonth(product.getExpiredDate(), cartItem.getMonth()));
+//        orderDetail.setStartDate(product.getExpiredDate());
+//      }
+//      orderDetails.add(orderDetail);
+//    }
+//    order.setTotal(calculateProductCost(orderDetails));
+//    OrderTrack track = new OrderTrack();
+//    track.setOrder(order);
+//    track.setStatus(OrderStatus.PREORDER);
+//    track.setNotes(OrderStatus.PREORDER.defaultDescription());
+//    track.setUpdatedTime(new Date());
+//
+//    order.getOrderTracks().add(track);
+//    order.setCancelTime(Helper.PlusHour(today, 1));
+//    Order orderSaved = orderRepository.save(order);
+//    Notification notification = new Notification("Đơn hàng " + orderSaved.getId() + " mới được đặt",
+//        new Date(), MessageType.ORDER,
+//        false, orderSaved.getId(), null);
+//    Notification notification2 = notificationService.addNotification2(notification);
+//    simpMessagingTemplate.convertAndSend("/notification/public", notification2);
+//
+//    return order;
+//  }
 }

@@ -180,9 +180,9 @@ public class AddressService {
     AddressDetaildto addressDetaildto = new AddressDetaildto();
 
     for (Product product : list) {
-      addressDetaildto.setAddress(product.getAddress());
       product.setAddress(null);
     }
+    addressDetaildto.setAddress(getById(addressId));
     addressDetaildto.setProduct(list);
     return addressDetaildto;
   }

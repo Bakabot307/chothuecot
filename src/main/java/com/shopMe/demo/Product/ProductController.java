@@ -113,7 +113,6 @@ public class ProductController {
     }
 
     productDB = productDB.copyUpdate(productDto);
-
     Category category = categoryService.getById(productDB.getCategory().getId());
     productDB.setCategory(category);
 

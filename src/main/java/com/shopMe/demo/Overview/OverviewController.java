@@ -66,14 +66,15 @@ public class OverviewController {
       @RequestParam String date1,
       @RequestParam String date2,
       @RequestParam Integer page,
-      @RequestParam Integer dataPerPage
+      @RequestParam Integer dataPerPage,
+      @RequestParam(required = false) Integer addressId
   ) throws ParseException {
 
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     System.out.println(format.parse(date1));
     System.out.println(format.parse(date2));
     OverviewProductDto test = overviewService.getProductHired(sort, format.parse(date1),
-        format.parse(date2), page, dataPerPage);
+        format.parse(date2), page, dataPerPage, addressId);
     return new ResponseEntity<>(test, HttpStatus.OK);
   }
 

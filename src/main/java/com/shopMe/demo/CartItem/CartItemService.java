@@ -2,12 +2,14 @@ package com.shopMe.demo.CartItem;
 
 import com.shopMe.demo.Product.Product;
 import com.shopMe.demo.Product.ProductRepository;
+import com.shopMe.demo.Product.ProductStatus;
 import com.shopMe.demo.exceptions.CartItemNotExistException;
 import com.shopMe.demo.exceptions.ProductNotExistException;
 import com.shopMe.demo.exceptions.ShoppingCartException;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserService;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,12 @@ public class CartItemService {
 
   public List<CartItem> getCartByUser(User user) {
     return cartItemRepository.findByUser(user);
+  }
+
+  public List<CartItem> getCartByUserHasProductAvailable(User user) {
+    return cartItemRepository.findByUser(user).stream()
+        .filter(cartItem -> cartItem.getProduct().getStatus() == ProductStatus.AVAILABLE)
+        .collect(Collectors.toList());
   }
 
 

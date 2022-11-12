@@ -233,6 +233,7 @@ public class Product {
         ", \"description\":\"" + description + '\"' +
         ", \"price\":" + price +
         ", \"status\":\"" + status + '\"' +
+        ", \"street\":\"" + address.getStreet() + '\"' +
         '}';
 
   }

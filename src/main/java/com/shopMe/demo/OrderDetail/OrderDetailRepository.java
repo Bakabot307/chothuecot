@@ -22,6 +22,12 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Intege
   @Query("SELECT o FROM OrderDetail o WHERE o.expiredDate IS NOT NULL AND o.expiredDate > ?1")
   List<OrderDetail> findAllBeingOrdered(Date date);
 
-  @Query("SELECT o FROM OrderDetail o WHERE o.startDate IS NOT NULL AND o.startDate > ?1 AND o.startDate < ?2")
+  @Query("SELECT o FROM OrderDetail o WHERE o.startDate IS NOT NULL "
+      + "AND o.startDate > ?1 AND o.startDate < ?2")
   List<OrderDetail> findAllByDate(Date date1, Date date2);
+
+
+  @Query("SELECT o FROM OrderDetail o WHERE o.startDate IS NOT NULL "
+      + "AND o.startDate > ?1 AND o.startDate < ?2 AND o.product.address.id= ?3")
+  List<OrderDetail> findAllByDate(Date date1, Date date2, Integer streetId);
 }

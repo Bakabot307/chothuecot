@@ -10,15 +10,18 @@ public class OverviewProductDto {
   int maxPage;
   int currentPage;
 
+  int totalHired;
+
   public OverviewProductDto() {
   }
 
   public OverviewProductDto(Map<Product, Long> map, int totalProduct, int maxPage,
-      int currentPage) {
+      int currentPage, int totalHired) {
     this.map = map;
     this.totalProduct = totalProduct;
     this.maxPage = maxPage;
     this.currentPage = currentPage;
+    this.totalHired = totalHired;
   }
 
 
@@ -52,5 +55,13 @@ public class OverviewProductDto {
 
   public void setCurrentPage(int currentPage) {
     this.currentPage = currentPage;
+  }
+
+  public int getTotalHired() {
+    return totalHired;
+  }
+
+  public void setTotalHired(int totalHired) {
+    this.totalHired = totalHired;
   }
 }

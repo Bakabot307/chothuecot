@@ -42,6 +42,12 @@ public enum OrderStatus {
     public String defaultDescription() {
       return "Khách hàng đã yêu cầu gia hạn";
     }
+  }, PREORDER {
+    @Override
+    public String defaultDescription() {
+      return "Khách hàng đã đặt hàng trước";
+    }
+
   };
 
 
