@@ -28,6 +28,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Intege
 
 
   @Query("SELECT o FROM OrderDetail o WHERE o.startDate IS NOT NULL "
-      + "AND o.startDate > ?1 AND o.startDate < ?2 AND o.product.address.id= ?3")
-  List<OrderDetail> findAllByDate(Date date1, Date date2, Integer streetId);
+      + "AND o.startDate > ?1 AND o.startDate < ?2 AND o.product.address.street LIKE %?3%")
+  List<OrderDetail> findAllByDate(Date date1, Date date2, String streetId);
 }

@@ -218,7 +218,7 @@ public class OverviewService {
   }
 
   public OverviewProductDto getProductHired(String sort, Date date1, Date date2, Integer page,
-      Integer dataPerPage, Integer addressId) {
+      Integer dataPerPage, String keyword) {
     List<OrderDetail> listDetail;
     final Map<Product, Long> map;
     final Map<Product, Long> finalMap;
@@ -227,9 +227,9 @@ public class OverviewService {
 
     List<Product> listProduct;
 
-    if (addressId != null) {
-      listProduct = productRepository.getByAddress(addressId);
-      listDetail = orderDetailRepository.findAllByDate(date1, date2, addressId);
+    if (keyword != null) {
+      listProduct = productRepository.findAllP(keyword);
+      listDetail = orderDetailRepository.findAllByDate(date1, date2, keyword);
     } else {
       listProduct = (List<Product>) productRepository.findAll();
       listDetail = orderDetailRepository.findAllByDate(date1, date2);

@@ -17,7 +17,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
   @Query("SELECT p FROM Product p WHERE p.name LIKE %?1% " +
       "OR p.price = ?1 " +
       "OR p.address.street LIKE %?1%")
-  Page<Product> findAllP(String keyword, Pageable pageable);
+  List<Product> findAllP(String keyword);
 
 
   @Query("SELECT p FROM Product p WHERE p.name LIKE %?1% " +
@@ -28,4 +28,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
 
   @Query("SELECT p from Product p where p.category.id = ?1")
   List<Product> findByCategory(Integer category);
+
+
 }
