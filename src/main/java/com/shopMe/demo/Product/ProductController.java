@@ -1,6 +1,7 @@
 package com.shopMe.demo.Product;
 
 import com.shopMe.demo.Address.Address;
+import com.shopMe.demo.Address.AddressPoint.AddressPointService;
 import com.shopMe.demo.Address.AddressService;
 import com.shopMe.demo.Amazon.AmazonS3Util;
 import com.shopMe.demo.Category.Category;
@@ -43,7 +44,11 @@ public class ProductController {
   @Autowired
   private final ProductService productService;
 
+
+  @Autowired
+  private AddressPointService addressPointService;
   private final AddressService addressService;
+
 
   CategoryService categoryService;
 
@@ -77,6 +82,11 @@ public class ProductController {
 
     product.setCategory(category);
     product.setAddress(address);
+
+    double random = productDto.getNum1() + Math.random() * (productDto.getNum2()
+        - productDto.getNum1());
+    product.setNumber(random);
+
     Product savedProduct = productService.save(product);
 
     if (multipartFile == null) {
@@ -111,21 +121,23 @@ public class ProductController {
           new ApiResponse(false, "Product is being hired, can't change status"),
           HttpStatus.BAD_REQUEST);
     }
+    double random = productDto.getNum1() + Math.random() * (productDto.getNum2()
+        - productDto.getNum1());
 
+    System.out.println(productDto.getNum1() + productDto.getNum2());
     productDB = productDB.copyUpdate(productDto);
+    productDB.setNumber(random);
     Category category = categoryService.getById(productDB.getCategory().getId());
     productDB.setCategory(category);
 
     Address address = addressService.getById(productDto.getAddressId());
     productDB.setAddress(address);
 
-    if (!multipartFile.isEmpty()) {
+    if (multipartFile != null && !multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       productDB.setImage(fileName);
-
       String uploadDir = "product-images/" + productDB.getId();
-
       AmazonS3Util.removeFolder(uploadDir);
       AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
     }

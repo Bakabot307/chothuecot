@@ -74,14 +74,6 @@ public class CartItem {
 
   @Transient
   public int hiringProductNumber;
-  
-  @Override
-  public String toString() {
-    return "CartItem{" +
-        "id=" + id +
-        ", user=" + user +
-        ", product=" + product +
-        ", day=" + month +
-        '}';
-  }
+
+
 }

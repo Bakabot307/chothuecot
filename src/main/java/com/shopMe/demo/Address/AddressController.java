@@ -129,8 +129,10 @@ public class AddressController {
   @GetMapping("/address/{addressId}")
   public ResponseEntity<AddressDetaildto> findByAddressId(
       @PathVariable("addressId") Integer addressId,
-      @RequestParam(required = false) Integer categoryId) throws AddressNotExistException {
-    AddressDetaildto list = addressService.findByAddressId(addressId, categoryId);
+      @RequestParam(required = false) Integer categoryId,
+      @RequestParam(required = false) Double num1,
+      @RequestParam(required = false) Double num2) throws AddressNotExistException {
+    AddressDetaildto list = addressService.findByAddressId(addressId, categoryId, num1, num2);
     return ResponseEntity.ok().body(list);
   }
 

@@ -157,10 +157,17 @@ public class AddressService {
     };
   }
 
-  public AddressDetaildto findByAddressId(Integer addressId, Integer categoryId)
+  public AddressDetaildto findByAddressId(Integer addressId, Integer categoryId, Double num1,
+      Double num2)
       throws AddressNotExistException {
-    List<Product> list = productRepository.getByAddress(addressId);
-
+    List<Product> list;
+    if (num1 == null && num2 == null || num1 == 0
+        && num2 == 0) {
+      list = productRepository.getByAddress(addressId);
+    } else {
+      list = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
+    }
+    System.out.println(list);
     if (list == null) {
       throw new AddressNotExistException("Address not exist");
     }
@@ -179,9 +186,6 @@ public class AddressService {
 
     AddressDetaildto addressDetaildto = new AddressDetaildto();
 
-    for (Product product : list) {
-      product.setAddress(null);
-    }
     addressDetaildto.setAddress(getById(addressId));
     addressDetaildto.setProduct(list);
     return addressDetaildto;

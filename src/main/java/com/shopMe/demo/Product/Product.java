@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -47,6 +48,15 @@ public class Product {
   private ProductStatus status;
 
   private String image;
+
+  @Column(name = "lat", nullable = false)
+  private Double lat;
+
+  @Column(name = "lng", nullable = false)
+  private Double lng;
+
+  @Column(name = "number", nullable = false)
+  private Double number;
   @ManyToOne
   @JoinColumn(name = "address_id")
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -101,6 +111,8 @@ public class Product {
     this.name = add.getName();
     this.description = add.getDescription();
     this.price = add.getPrice();
+    this.lat = add.getLat();
+    this.lng = add.getLng();
   }
 
   public Product copyUpdate(UpdateProductDto update) {
@@ -109,9 +121,19 @@ public class Product {
     this.description = update.getDescription();
     this.price = update.getPrice();
     this.status = update.getStatus();
+    this.lat = update.getLat();
+    this.lng = update.getLng();
     return this;
   }
 
+  
+  public Double getNumber() {
+    return number;
+  }
+
+  public void setNumber(Double number) {
+    this.number = number;
+  }
 
   public boolean isInCart() {
     return isInCart;
@@ -168,6 +190,22 @@ public class Product {
   public float getPrice() {
     return price;
 
+  }
+
+  public Double getLat() {
+    return lat;
+  }
+
+  public void setLat(Double lat) {
+    this.lat = lat;
+  }
+
+  public Double getLng() {
+    return lng;
+  }
+
+  public void setLng(Double lng) {
+    this.lng = lng;
   }
 
   public void setPrice(float price) {

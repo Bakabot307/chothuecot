@@ -24,6 +24,12 @@ public class AProductDto {
 
   private String image;
 
+  private Double lat;
+
+  private Double lng;
+
+  private Double number;
+
   public AProductDto() {
   }
 
@@ -36,8 +42,27 @@ public class AProductDto {
     this.address = p.getAddress();
     this.category = p.getCategory();
     this.image = p.getPhotosImagePath();
+    this.lat = p.getLat();
+    this.lng = p.getLng();
+    this.number = p.getNumber();
   }
 
+
+  public Double getLat() {
+    return lat;
+  }
+
+  public void setLat(Double lat) {
+    this.lat = lat;
+  }
+
+  public Double getLng() {
+    return lng;
+  }
+
+  public void setLng(Double lng) {
+    this.lng = lng;
+  }
 
   public Integer getId() {
     return id;
@@ -95,6 +120,13 @@ public class AProductDto {
     this.category = category;
   }
 
+  public Double getNumber() {
+    return number;
+  }
+
+  public void setNumber(Double number) {
+    this.number = number;
+  }
 
   public String getImage() {
     return image;
@@ -104,15 +136,5 @@ public class AProductDto {
     this.image = image;
   }
 
-  @Override
-  public String toString() {
-    return "AProductDto{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", price=" + price +
-        ", status=" + status +
-        ", address=" + address +
-        '}';
-  }
+
 }

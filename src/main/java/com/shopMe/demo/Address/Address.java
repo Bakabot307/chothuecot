@@ -1,6 +1,7 @@
 package com.shopMe.demo.Address;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shopMe.demo.Address.AddressPoint.AddressPoint;
 import com.shopMe.demo.Address.dto.AddAddressDto;
 import com.shopMe.demo.Product.Product;
 import com.shopMe.demo.common.Constants;
@@ -37,6 +38,9 @@ public class Address {
   @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Product> products;
 
+  @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<AddressPoint> addressPoints;
+  
   public Address() {
   }
 
@@ -112,6 +116,14 @@ public class Address {
       return Constants.S3_BASE_URI + "/default-images/default-user.png";
     }
     return Constants.S3_BASE_URI + "/address-images/" + this.id + "/" + this.image;
+  }
+
+  public Set<AddressPoint> getAddressPoints() {
+    return addressPoints;
+  }
+
+  public void setAddressPoints(Set<AddressPoint> addressPoints) {
+    this.addressPoints = addressPoints;
   }
 
   @Override
