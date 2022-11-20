@@ -146,12 +146,15 @@ public class AddressController {
   @GetMapping("/address2/{addressId}")
   public ResponseEntity<AddressDetaildto> findByAddressId2(
       @PathVariable("addressId") Integer addressId,
-      @RequestParam(required = false) Integer categoryId
+      @RequestParam(required = false) Integer categoryId,
+      @RequestParam(required = false) Double num1,
+      @RequestParam(required = false) Double num2
   )
       throws AddressNotExistException, UserNotFoundException {
     User userDB = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User user = userService.getById(userDB.getId());
-    AddressDetaildto list = addressService.findByAddressId2(addressId, user, categoryId);
+    AddressDetaildto list = addressService.findByAddressId2(addressId, user, categoryId, num1,
+        num2);
     return ResponseEntity.ok().body(list);
   }
 }

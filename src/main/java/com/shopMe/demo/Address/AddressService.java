@@ -191,9 +191,16 @@ public class AddressService {
     return addressDetaildto;
   }
 
-  public AddressDetaildto findByAddressId2(Integer addressId, User user, Integer categoryId)
+  public AddressDetaildto findByAddressId2(Integer addressId, User user, Integer categoryId,
+      Double num1, Double num2)
       throws AddressNotExistException {
-    List<Product> list = productRepository.getByAddress(addressId);
+    List<Product> list;
+    if (num1 == null && num2 == null || num1 == 0
+        && num2 == 0) {
+      list = productRepository.getByAddress(addressId);
+    } else {
+      list = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
+    }
 
     if (categoryId != null) {
       list = list.stream().filter(product -> Objects.equals(product.getCategory().getId(),
