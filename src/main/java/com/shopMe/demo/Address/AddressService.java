@@ -104,27 +104,26 @@ public class AddressService {
       addressDto.setTotalProduct(totalProduct);
       dtos.add(addressDto);
     }
+    if (sortField != null || sort != null) {
+      dtos.sort(Comparator.comparing(reflectiveGetter(sortField)));
+      dtos.forEach(e -> System.out.println(e.getTotalProductAvailable()));
+      if (Objects.equals(sort, "desc")) {
+        dtos = Lists.reverse(dtos);
+        System.out.println("reverse");
+        dtos.forEach(e -> System.out.println(e.getTotalProductAvailable()));
+      }
+    }
     dtos = dtos.stream()
         .filter(address -> address.getId() != null)
         .limit(dataPerPage)
         .skip((long) dataPerPage * (pageNum - 1)).collect(Collectors.toList());
+    System.out.println(dataPerPage * (pageNum - 1));
     PageAddressDto pageAddressDto = new PageAddressDto();
     Map<String, Integer> pageInfo = new HashMap<>();
 
-    if (sortField != null || sort != null) {
-      dtos = dtos.stream()
-          .filter(address -> address.getId() != null)
-          .limit(dataPerPage)
-          .skip((long) dataPerPage * (pageNum - 1)).collect(Collectors.toList());
-      dtos.sort(Comparator.comparing(reflectiveGetter(sortField)).reversed());
-
-      if (Objects.equals(sort, "desc")) {
-        dtos = Lists.reverse(dtos);
-      }
-    }
-
     int totalData = list.size();
-    int lastPage = Math.max((int) Math.ceil(totalData / dataPerPage), 1);
+//    (total + dataPerPage - 1) / dataPerPage
+    int lastPage = (totalData + dataPerPage - 1) / dataPerPage;
     int from = ((pageNum - 1) * dataPerPage) + 1;
     int to = Math.min(pageNum * dataPerPage, totalData);
     int perPage = dataPerPage;
