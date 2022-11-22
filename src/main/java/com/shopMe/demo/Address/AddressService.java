@@ -113,14 +113,15 @@ public class AddressService {
         dtos.forEach(e -> System.out.println(e.getTotalProductAvailable()));
       }
     }
+    System.out.println(dtos.size());
     dtos = dtos.stream()
         .filter(address -> address.getId() != null)
+        .skip((long) dataPerPage * (pageNum - 1))
         .limit(dataPerPage)
-        .skip((long) dataPerPage * (pageNum - 1)).collect(Collectors.toList());
-    System.out.println(dataPerPage * (pageNum - 1));
+        .collect(Collectors.toList());
     PageAddressDto pageAddressDto = new PageAddressDto();
     Map<String, Integer> pageInfo = new HashMap<>();
-
+    System.out.println(dtos.size());
     int totalData = list.size();
 //    (total + dataPerPage - 1) / dataPerPage
     int lastPage = (totalData + dataPerPage - 1) / dataPerPage;
@@ -131,7 +132,7 @@ public class AddressService {
     pageInfo.put("totalData", totalData);
     pageInfo.put("dataPerPage", perPage);
     pageInfo.put("currentPage", pageNum);
-    pageInfo.put("lastPage", lastPage);
+    pageInfo.put("lastPage", keyword == null ? lastPage : dtos.size());
     pageInfo.put("from", from);
     pageInfo.put("to", to);
 
@@ -216,13 +217,13 @@ public class AddressService {
           .collect(Collectors.toList());
     }
     AddressDetaildto addressDetaildto = new AddressDetaildto();
-    if (list == null) {
-      throw new AddressNotExistException("Address not exist");
+    if (list == null || list.size() == 0) {
+      throw new AddressNotExistException("Đường không có trụ nào");
     }
 
     Set<Product> wishlist = user.getWishlist();
     List<CartItem> cart = cartItemService.getCartByUser(user);
-
+    System.out.println(list);
     addressDetaildto.setAddress(list.get(0).getAddress());
     list.forEach(product -> {
       if (wishlist.contains(product)) {

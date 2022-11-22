@@ -82,6 +82,10 @@ public class Product {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @Transient
+  private Integer month;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Transient
   private String user;
 
   @Transient
@@ -103,6 +107,7 @@ public class Product {
       return null;
     }
   }
+
 
   public Product() {
   }
@@ -126,7 +131,7 @@ public class Product {
     return this;
   }
 
-  
+
   public Double getNumber() {
     return number;
   }
@@ -225,8 +230,17 @@ public class Product {
     if (showOrderDetail() == null) {
       return null;
     } else {
-      return showOrderDetail().getStartDate();
+      return showOrderDetail2().getStartDate();
     }
+  }
+
+  public Integer getMonth() {
+    return orderDetails.stream()
+        .filter(Objects::nonNull)
+        .filter(orderDetail -> orderDetail.getExpiredDate() != null)
+        .filter(orderDetail -> orderDetail.getExpiredDate().after(new Date()))
+        .map(OrderDetail::getMonth)
+        .reduce(0, Integer::sum);
   }
 
   public String getUser() {
@@ -300,6 +314,14 @@ public class Product {
         .filter(orderDetail -> orderDetail.getExpiredDate() != null)
         .filter(orderDetail -> orderDetail.getExpiredDate().after(new Date()))
         .max(Comparator.comparing(OrderDetail::getExpiredDate)).orElse(null);
+  }
+
+  private OrderDetail showOrderDetail2() {
+    return orderDetails.stream()
+        .filter(Objects::nonNull)
+        .filter(orderDetail -> orderDetail.getExpiredDate() != null)
+        .filter(orderDetail -> orderDetail.getExpiredDate().after(new Date()))
+        .min(Comparator.comparing(OrderDetail::getExpiredDate)).orElse(null);
   }
 
 

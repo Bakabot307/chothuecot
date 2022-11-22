@@ -1,5 +1,6 @@
 package com.shopMe.demo.OrderDetail;
 
+import com.shopMe.demo.Order.OrderStatus;
 import com.shopMe.demo.config.Helper;
 import java.util.Comparator;
 import java.util.Date;
@@ -21,24 +22,26 @@ public class OrderDetailService {
   public List<OrderDetail> getOrderDetailByUser(Integer id, String status) {
     List<OrderDetail> orderDetailList = orderDetailRepository.findByUserId(id);
     Date today = new Date();
-    if (status.equals("extend")) {
+    if (status.equals("expired")) {
       orderDetailList = orderDetailList.stream()
+          .filter(orderDetail -> orderDetail.getOrders().getStatus() != OrderStatus.USER_CONFIRMED
+              && orderDetail.getOrders().getStatus() != OrderStatus.NEW
+              && orderDetail.getOrders().getStatus() != OrderStatus.EXTEND
+              && orderDetail.getOrders().getStatus() != OrderStatus.CANCELLED)
+          .filter(orderDetail -> orderDetail.getExpiredDate() != null)
+          .filter(orderDetail -> orderDetail.getExpiredDate().before(today))
+
+          .sorted(Comparator.comparing(OrderDetail::getExpiredDate))
+          .filter(Helper.distinctByKey(orderDetail -> orderDetail.getProduct().getId())).collect(
+              Collectors.toList());
+        
+    } else if (status.equals("hiring")) {
+      orderDetailList = orderDetailList.stream()
+          .filter(orderDetail -> orderDetail.getOrders().getStatus() == OrderStatus.PAID)
           .filter(orderDetail -> orderDetail.getExpiredDate() != null)
           .filter(orderDetail -> orderDetail.getExpiredDate().after(today))
           .sorted(Comparator.comparing(OrderDetail::getExpiredDate).reversed())
           .filter(Helper.distinctByKey(orderDetail -> orderDetail.getProduct().getId())).collect(
-              Collectors.toList());
-    } else if (status.equals("expired")) {
-      orderDetailList = orderDetailList.stream()
-          .filter(orderDetail -> orderDetail.getExpiredDate() != null)
-          .filter(orderDetail -> orderDetail.getExpiredDate().before(today))
-          .sorted(Comparator.comparing(OrderDetail::getExpiredDate))
-          .collect(
-              Collectors.toList());
-    } else if (status.equals("all")) {
-      orderDetailList = orderDetailList.stream()
-          .sorted(Comparator.comparing(OrderDetail::getExpiredDate).reversed())
-          .collect(
               Collectors.toList());
     }
     return orderDetailList;

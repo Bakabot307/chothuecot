@@ -170,9 +170,10 @@ public class OrderController {
 
   @RolesAllowed("ROLE_USER")
   @GetMapping("/user/orders")
-  public ResponseEntity<List<OrderResponseDto>> getAllOrderForUser() {
+  public ResponseEntity<List<OrderResponseDto>> getAllOrderForUser(
+      @RequestParam(required = false) OrderStatus status) {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    List<OrderResponseDto> list = orderService.getAllOrderForUser(user);
+    List<OrderResponseDto> list = orderService.getAllOrderForUser(user, status);
     return ResponseEntity.ok().body(list);
   }
 

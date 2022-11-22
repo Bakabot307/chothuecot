@@ -107,11 +107,11 @@ public class AddressController {
     if (multipartFile != null && !multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
+      editAddress.setImage(fileName);
       String uploadDir = "address-images/" + editAddress.getId();
       AmazonS3Util.removeFolder(uploadDir);
       AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
     }
-
     addressService.save(editAddress);
     return new ResponseEntity<>(new ApiResponse(true, "edited successfully"), HttpStatus.CREATED);
   }

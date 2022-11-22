@@ -129,10 +129,15 @@ public class OrderService {
     return orderRepository.findByUserId(id);
   }
 
-  public List<OrderResponseDto> getAllOrderForUser(User user) {
+  public List<OrderResponseDto> getAllOrderForUser(User user, OrderStatus status) {
     List<Order> list = orderRepository.findByUserAndAndHasNoParentOrder(user.getId())
         .stream()
-
+        .filter(order -> {
+          if (status == null) {
+            return true;
+          }
+          return order.getStatus() == status;
+        })
         .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
             Comparator.naturalOrder())).reversed().thenComparing(Order::getStatus)).toList();
 
@@ -222,14 +227,14 @@ public class OrderService {
   }
 
   public void confirm(Order order) {
-    List<OrderDetail> listDetail = orderDetailRepository.findByOrderId(order.getId());
+//    List<OrderDetail> listDetail = orderDetailRepository.findByOrderId(order.getId());
     Date confirmDate = new Date();
     order.setConfirmedTime(confirmDate);
     System.out.println("new");
-    for (OrderDetail orderDetail : listDetail) {
-      orderDetail.setExpiredDate(Helper.PlusMonth(confirmDate, orderDetail.getMonth()));
-      orderDetail.setStartDate(confirmDate);
-    }
+//    for (OrderDetail orderDetail : listDetail) {
+//      orderDetail.setExpiredDate(Helper.PlusMonth(confirmDate, orderDetail.getMonth()));
+//      orderDetail.setStartDate(confirmDate);
+//    }
 
     OrderTrack track = new OrderTrack();
     track.setOrder(order);
@@ -311,7 +316,7 @@ public class OrderService {
       OrderDetail orderDetail = new OrderDetail();
       orderDetail.setOrders(newOrder);
       orderDetail.setMonth(pair.getValue());
-      orderDetail.setStartDate(product.getStartDate());
+      orderDetail.setStartDate(product.getExpiredDate());
       orderDetail.setProduct(product);
       orderDetail.setExpiredDate(Helper.PlusMonth(product.getExpiredDate(), pair.getValue()));
       listOrderDetails.add(orderDetail);
