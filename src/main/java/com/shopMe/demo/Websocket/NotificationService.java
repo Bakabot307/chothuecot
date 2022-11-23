@@ -14,7 +14,7 @@ public class NotificationService {
   public List<Notification> getNotifications(Integer userId) {
     List<Notification> notifications = notificationRepository.findAll();
     notifications.sort(
-        Comparator.comparing(Notification::isChecked).thenComparing(Notification::getDate)
+        Comparator.comparing(Notification::getDate)
             .reversed());
     if (userId == null) {
       return notifications.stream().filter(n -> n.getUserId() == null).toList();

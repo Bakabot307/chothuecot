@@ -276,7 +276,8 @@ public class OverviewService {
         .sorted(Comparator.comparing(OrderDetail::getStartDate).reversed())
         .collect(Collectors.groupingBy(
             orderDetail -> YearMonth.from(
-                orderDetail.getStartDate().toInstant().atZone(ZoneId.systemDefault())),
+                orderDetail.getOrders().getConfirmedTime().toInstant()
+                    .atZone(ZoneId.systemDefault())),
             Collectors.counting()
         ));
   }
