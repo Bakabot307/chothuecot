@@ -69,4 +69,12 @@ public class NotificationController {
     System.out.println(message.toString());
     return message;
   }
+
+  @MessageMapping("/private-message/cart")
+  public Notification cartUpdate(@Payload Notification message) {
+    simpMessagingTemplate.convertAndSendToUser(message.getUserId().toString(), "/user", message);
+    simpMessagingTemplate.convertAndSendToUser("15", "/user",
+        "cart");
+    return message;
+  }
 }

@@ -64,17 +64,16 @@ public class CartItemController {
     return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
   }
 
-  @PostMapping("/addtocart_preorder")
+  @PostMapping("/addtocart_combo")
   @RolesAllowed("ROLE_USER")
-  public ResponseEntity<ApiResponse> addtocart_preorder(@RequestBody CartItemDto cartItemDto)
-      throws ShoppingCartException, ProductNotExistException {
+  public ResponseEntity<ApiResponse> addtocart_combo(
+      @RequestParam("addressId") Integer addressId,
+      @RequestParam Double num1,
+      @RequestParam Double num2,
+      @RequestParam Integer month) {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    CartItem cart = new CartItem();
-    Product product = productService.findById(cartItemDto.getProductId());
-    cart.setUser(user);
-    cart.setProduct(product);
-    cart.setMonth(cartItemDto.getMonth());
-    cartItemService.addCart(cart);
+
+    cartItemService.addCombo(addressId, num1, num2, month, user);
     return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
   }
 
@@ -90,17 +89,11 @@ public class CartItemController {
     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
       CartItem cart = new CartItem();
       Product product = productService.findById(entry.getKey());
-      if (product.getStatus() == ProductStatus.HIRING) {
-        return new ResponseEntity<>(
-            new ApiResponse(false, "product has been ordered by someone else"),
-            HttpStatus.BAD_REQUEST);
-      }
       cart.setUser(user);
       cart.setProduct(product);
       cart.setMonth(entry.getValue());
       cartItemService.addCart(cart);
     }
-
     return ResponseEntity.ok().body(mapDto);
   }
 

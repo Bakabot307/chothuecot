@@ -12,12 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 public class CartItemService {
 
+  @Autowired
+  private SimpMessagingTemplate template;
 
   private final CartItemRepository cartItemRepository;
 
@@ -36,13 +39,12 @@ public class CartItemService {
       throw new ShoppingCartException("product is already in cart");
     } else {
       cartItemRepository.save(cart);
+      template.convertAndSendToUser(cart.getUser().getId().toString(), "/private",
+          "cart");
     }
 
   }
 
-  public void addPreOrder(CartItem cart) throws ShoppingCartException {
-
-  }
 
   public void save(CartItem cart) {
     cartItemRepository.save(cart);
@@ -61,6 +63,8 @@ public class CartItemService {
     CartItem cartItem = cartItemRepository.findByUserAndProductId(user.getId(), productId);
     if (cartItem != null) {
       cartItemRepository.deleteByUserAndProduct(user.getId(), productId);
+      template.convertAndSendToUser(user.getId().toString(), "/private",
+          "cart");
     } else {
       throw new CartItemNotExistException("Item not exist in cart");
     }
@@ -68,6 +72,8 @@ public class CartItemService {
   }
 
   public void deleteByUser(User user) {
+    template.convertAndSendToUser(user.getId().toString(), "/private",
+        "cart");
     cartItemRepository.deleteByUser(user.getId());
   }
 
@@ -81,8 +87,18 @@ public class CartItemService {
         .collect(Collectors.toList());
   }
 
-
   public void deleteCartItem(CartItem c) {
     cartItemRepository.delete(c);
+  }
+
+  public void addCombo(Integer addressId, Double num1, Double num2, Integer month, User user) {
+    List<Product> products = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
+    products.forEach(product -> {
+      CartItem cartItem = new CartItem();
+      cartItem.setProduct(product);
+      cartItem.setUser(user);
+      cartItem.setMonth(month);
+      cartItemRepository.save(cartItem);
+    });
   }
 }
