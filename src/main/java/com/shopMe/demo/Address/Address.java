@@ -38,12 +38,12 @@ public class Address {
   @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Product> products;
 
+
   @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<AddressPoint> addressPoints;
-  
+
   public Address() {
   }
-
 
   public Address(AddAddressDto a) {
     this.street = a.getStreet();

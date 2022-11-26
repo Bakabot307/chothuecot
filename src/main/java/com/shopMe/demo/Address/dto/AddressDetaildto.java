@@ -14,6 +14,7 @@ public class AddressDetaildto {
 
   private boolean isInWishList;
 
+
   public List<Product> getProduct() {
     return product;
   }

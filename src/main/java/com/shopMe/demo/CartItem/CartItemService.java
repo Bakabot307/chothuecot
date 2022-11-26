@@ -78,7 +78,8 @@ public class CartItemService {
   }
 
   public List<CartItem> getCartByUser(User user) {
-    return cartItemRepository.findByUser(user);
+    List<CartItem> list = cartItemRepository.findByUser(user);
+    return list;
   }
 
   public List<CartItem> getCartByUserHasProductAvailable(User user) {
