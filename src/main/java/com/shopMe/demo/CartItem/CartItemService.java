@@ -92,13 +92,17 @@ public class CartItemService {
     cartItemRepository.delete(c);
   }
 
-  public void addCombo(Integer addressId, Double num1, Double num2, Integer month, User user) {
+  public void addCombo(Integer addressId, Double num1, Double num2, User user) {
     List<Product> products = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
+    List<CartItem> cart = cartItemRepository.findByUser(user);
+
+    products.removeAll(cart.stream().map(CartItem::getProduct).toList());
+
     products.forEach(product -> {
       CartItem cartItem = new CartItem();
       cartItem.setProduct(product);
       cartItem.setUser(user);
-      cartItem.setMonth(month);
+      cartItem.setMonth(1);
       cartItemRepository.save(cartItem);
     });
   }

@@ -69,12 +69,11 @@ public class CartItemController {
   public ResponseEntity<ApiResponse> addtocart_combo(
       @RequestParam("addressId") Integer addressId,
       @RequestParam Double num1,
-      @RequestParam Double num2,
-      @RequestParam Integer month) {
+      @RequestParam Double num2) {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    cartItemService.addCombo(addressId, num1, num2, month, user);
-    return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
+    cartItemService.addCombo(addressId, num1, num2, user);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm tất cả vào giỏ hàng"), HttpStatus.CREATED);
   }
 
   @PostMapping("/addalltocart")
