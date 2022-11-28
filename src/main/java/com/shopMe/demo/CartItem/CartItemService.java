@@ -59,12 +59,10 @@ public class CartItemService {
     productRepository.save(product);
   }
 
-  public void removeProduct(Integer productId, User user) throws ProductNotExistException {
+  public void removeProduct(Integer productId, User user)  {
     CartItem cartItem = cartItemRepository.findByUserAndProductId(user.getId(), productId);
     if (cartItem != null) {
       cartItemRepository.deleteByUserAndProduct(user.getId(), productId);
-      template.convertAndSendToUser(user.getId().toString(), "/private",
-          "cart");
     } else {
       throw new CartItemNotExistException("Item not exist in cart");
     }
@@ -72,8 +70,6 @@ public class CartItemService {
   }
 
   public void deleteByUser(User user) {
-    template.convertAndSendToUser(user.getId().toString(), "/private",
-        "cart");
     cartItemRepository.deleteByUser(user.getId());
   }
 
@@ -95,15 +91,28 @@ public class CartItemService {
   public void addCombo(Integer addressId, Double num1, Double num2, User user) {
     List<Product> products = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
     List<CartItem> cart = cartItemRepository.findByUser(user);
+    if (cart.size() == 0) {
+      for (Product product : products) {
+        CartItem cartItem = new CartItem();
+        if(product.getStatus() == ProductStatus.AVAILABLE){
+          cartItem.setProduct(product);
+          cartItem.setUser(user);
+          cartItem.setMonth(1);
+          cartItemRepository.save(cartItem);
+        }
 
-    products.removeAll(cart.stream().map(CartItem::getProduct).toList());
-
-    products.forEach(product -> {
-      CartItem cartItem = new CartItem();
-      cartItem.setProduct(product);
-      cartItem.setUser(user);
-      cartItem.setMonth(1);
-      cartItemRepository.save(cartItem);
-    });
+      }
+    } else {
+      products.removeAll(cart.stream().map(CartItem::getProduct).toList());
+      products.forEach(product -> {
+        if(product.getStatus() == ProductStatus.AVAILABLE){
+          CartItem cartItem = new CartItem();
+          cartItem.setProduct(product);
+          cartItem.setUser(user);
+          cartItem.setMonth(1);
+          cartItemRepository.save(cartItem);
+        }
+      });
+    }
   }
 }

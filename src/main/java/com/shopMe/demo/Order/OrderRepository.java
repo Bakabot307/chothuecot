@@ -26,9 +26,4 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   @Query("SELECT o.orderTracks FROM Order o WHERE o.user.id = ?1 AND o.id = ?2")
   List<OrderTrack> getChildOrderTracks(Integer userId, Integer orderId);
 
-  @Query("SELECT o.orderTracks FROM Order o WHERE o.user.id = ?1 "
-      + "AND o.id = ?2 ")
-  List<OrderTrack> getParentOrderTracks(Integer userId, Integer orderId);
-
-
 }

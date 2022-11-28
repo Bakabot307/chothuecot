@@ -119,23 +119,6 @@ public class OrderController {
     }
   }
 
-//  @RolesAllowed("ROLE_USER")
-//  @PostMapping("/pre_order")
-//  public ResponseEntity<ApiResponse> preOrder() {
-//    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//    List<CartItem> cartItems = cartItemService.getCartByUser(user);
-//    if (cartItems.isEmpty()) {
-//      return new ResponseEntity<>(new ApiResponse(false, "Giỏ hàng trống vui lòng thêm sản phẩm"),
-//          HttpStatus.BAD_REQUEST);
-//    } else {
-//      Order order = orderService.preOrder(user, cartItems);
-//
-//      cartItemService.deleteByUser(user);
-//      return new ResponseEntity<>(
-//          new ApiResponse(true, "Đơn hàng [" + order.getId() + "] đã đặt thành công"),
-//          HttpStatus.OK);
-//    }
-//  }
 
   @RolesAllowed("ROLE_USER")
   @PostMapping("/remove_hiring_product")

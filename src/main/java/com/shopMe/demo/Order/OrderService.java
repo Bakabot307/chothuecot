@@ -371,19 +371,25 @@ public class OrderService {
 
   public void userConfirmPayment(Integer id, User user) throws OrderNotFoundException {
     Order order = getOrder(id, user);
-    OrderTrack track = new OrderTrack();
-    track.setOrder(order);
-    track.setStatus(OrderStatus.USER_CONFIRMED);
-    track.setNotes(OrderStatus.USER_CONFIRMED.defaultDescription());
-    track.setUpdatedTime(new Date());
-    order.getOrderTracks().add(track);
-    Order orderSaved = orderRepository.save(order);
-    Notification notification = new Notification(
-        "Đơn hàng số " + orderSaved.getId() + " đã được xác nhận",
-        new Date(), MessageType.ORDER,
-        false, orderSaved.getId(), null);
-    Notification notification2 = notificationService.addNotification2(notification);
-    simpMessagingTemplate.convertAndSend("/notification/public", notification2);
+    if(order.getStatus().equals(OrderStatus.EXTEND) || order.getStatus().equals(OrderStatus.NEW)){
+      OrderTrack track = new OrderTrack();
+      track.setOrder(order);
+      track.setStatus(OrderStatus.USER_CONFIRMED);
+      track.setNotes(OrderStatus.USER_CONFIRMED.defaultDescription());
+      track.setUpdatedTime(new Date());
+      order.getOrderTracks().add(track);
+      Order orderSaved = orderRepository.save(order);
+      Notification notification = new Notification(
+          "Đơn hàng số " + orderSaved.getId() + " đã được xác nhận",
+          new Date(), MessageType.ORDER,
+          false, orderSaved.getId(), null);
+      Notification notification2 = notificationService.addNotification2(notification);
+      simpMessagingTemplate.convertAndSend("/notification/public", notification2);
+    } else {
+      throw new OrderNotFoundException("Đơn hàng không tồn tại hoặc đã được xử lý");
+    }
+
+
   }
 
   public void userCancelOrder(Integer id, User user) throws OrderNotFoundException {

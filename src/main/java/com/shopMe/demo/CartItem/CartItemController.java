@@ -12,6 +12,7 @@ import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserService;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,16 +83,22 @@ public class CartItemController {
       @RequestBody MapDto mapDto)
       throws ShoppingCartException, ProductNotExistException {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    System.out.println(mapDto);
     Map<Integer, Integer> map = mapDto.getProductInfo();
+    List<Product> cartList  = cartItemService.getCartByUser(user).stream().map(CartItem::getProduct).toList();
+
     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
       CartItem cart = new CartItem();
       Product product = productService.findById(entry.getKey());
-      cart.setUser(user);
-      cart.setProduct(product);
-      cart.setMonth(entry.getValue());
-      cartItemService.addCart(cart);
+      cartList.stream().filter(p -> !Objects.equals(p.getId(), product.getId())).findFirst().ifPresent(p -> {
+        cart.setUser(user);
+        cart.setProduct(product);
+        cart.setMonth(entry.getValue());
+        try {
+          cartItemService.addCart(cart);
+        } catch (ShoppingCartException e) {
+          throw new RuntimeException(e);
+        }
+      });
     }
     return ResponseEntity.ok().body(mapDto);
   }

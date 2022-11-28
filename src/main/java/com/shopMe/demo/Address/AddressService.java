@@ -195,8 +195,7 @@ public class AddressService {
       Double num1, Double num2)
       throws AddressNotExistException {
     List<Product> list;
-    System.out.println(num1);
-    System.out.println(num2);
+    Address address = getById(addressId);
     if (num1 == null && num2 == null || num1 == 0
         && num2 == 0) {
       list = productRepository.getByAddress(addressId);
@@ -224,7 +223,7 @@ public class AddressService {
     Set<Product> wishlist = user.getWishlist();
     List<CartItem> cart = cartItemService.getCartByUser(user);
     System.out.println(list);
-    addressDetaildto.setAddress(list.get(0).getAddress());
+    addressDetaildto.setAddress(address);
     list.forEach(product -> {
       if (wishlist.contains(product)) {
         product.setInWishList(true);
