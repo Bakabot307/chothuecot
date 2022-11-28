@@ -20,6 +20,8 @@ import com.shopMe.demo.exceptions.OrderCantExtendException;
 import com.shopMe.demo.exceptions.OrderNotFoundException;
 import com.shopMe.demo.user.User;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -214,13 +216,15 @@ public class OrderController {
   @GetMapping("/admin/orders/")
   public ResponseEntity<List<OrderAdminDto>> getOrderByStatus(
       @RequestParam(required = false) String status,
-      @RequestParam(value = "keyword", required = false) String keyword) {
+      @RequestParam(value = "keyword", required = false) String keyword,
+      @RequestParam String fromDate,
+      @RequestParam String toDate) throws ParseException {
     OrderStatus eStatus = null;
     if (status != null) {
       eStatus = OrderStatus.valueOf(status);
     }
-
-    List<OrderAdminDto> list = orderService.findByStatus(eStatus, keyword);
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    List<OrderAdminDto> list = orderService.findByStatus(eStatus, keyword,format.parse(fromDate),format.parse(toDate));
     return ResponseEntity.ok().body(list);
   }
 

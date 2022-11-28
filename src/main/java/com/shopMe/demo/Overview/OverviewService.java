@@ -95,7 +95,7 @@ public class OverviewService {
           .filter(order -> order.getConfirmedTime() != null)
           .filter(
               order -> order.getStatus() == OrderStatus.PAID
-                  || order.getStatus() == OrderStatus.DONE)
+                  )
           .limit(number)
           .sorted(Comparator.comparing(Order::getConfirmedTime).reversed())
           .collect(Collectors.groupingBy(
@@ -111,7 +111,7 @@ public class OverviewService {
           .filter(order -> order.getConfirmedTime() != null)
           .filter(
               order -> order.getStatus() == OrderStatus.PAID
-                  || order.getStatus() == OrderStatus.DONE)
+                 )
           .limit(number)
           .sorted(Comparator.comparing(Order::getConfirmedTime).reversed())
           .collect(Collectors.groupingBy(
