@@ -138,7 +138,7 @@ public class OrderService {
           }
           return order.getStatus() == status;
         })
-        .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+        .sorted(Comparator.comparing(Order::getOrderTime, Comparator.nullsLast(
             Comparator.naturalOrder())).reversed().thenComparing(Order::getStatus)).toList();
 
     List<OrderResponseDto> listOrderDto = new ArrayList<>();
@@ -166,27 +166,27 @@ public class OrderService {
     List<Order> orders;
     if (status == null && keyword == null) {
       orders = orderRepository.findAll().stream()
-          .filter(order -> order.getConfirmedTime().after(fromDate) && order.getConfirmedTime().before(toDate))
+          .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
           .sorted(Comparator.comparing((Order::getOrderTime)))
           .collect(Collectors.toList());
 
     } else if (status != null && keyword != null) {
       orders = orderRepository.findByStatusAndKeyword(keyword).stream()
           .filter(o -> o.getStatus() == status)
-          .filter(order -> order.getConfirmedTime().after(fromDate) && order.getConfirmedTime().before(toDate))
+          .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
           .sorted(Comparator.comparing((Order::getOrderTime)))
           .collect(Collectors.toList());
     } else if (status != null) {
       orders = orderRepository.findAll().stream()
           .filter(Objects::nonNull)
           .filter(o -> o.getStatus() == status)
-          .filter(order -> order.getConfirmedTime().after(fromDate) && order.getConfirmedTime().before(toDate))
+          .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
           .sorted(Comparator.comparing((Order::getOrderTime)))
           .collect(Collectors.toList());
     } else {
       orders = orderRepository.findByStatusAndKeyword(keyword)
           .stream()
-          .filter(order -> order.getConfirmedTime().after(fromDate) && order.getConfirmedTime().before(toDate))
+          .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
           .sorted(Comparator.comparing((Order::getOrderTime))).collect(Collectors.toList());
     }
     for (Order order : orders) {
