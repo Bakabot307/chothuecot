@@ -104,6 +104,7 @@ public class AddressController {
     Address editAddress = addressService.getById(address.getId());
     editAddress.setCity(address.getCity());
     editAddress.setStreet(address.getStreet());
+    editAddress.setDescription(address.getDescription());
     if (multipartFile != null && !multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
