@@ -1,6 +1,9 @@
 package com.shopMe.demo.Address;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.shopMe.demo.Address.AddressPoint.AddressPoint;
+import com.shopMe.demo.Address.AddressPoint.AddressPointService;
 import com.shopMe.demo.Address.dto.AddressDetaildto;
 import com.shopMe.demo.Address.dto.AddressDto;
 import com.shopMe.demo.CartItem.CartItem;
@@ -45,6 +48,9 @@ public class AddressService {
 
   @Autowired
   private CartItemService cartItemService;
+
+  @Autowired
+  private AddressPointService addressPointService;
 
   @Autowired
   public AddressService(AddressRepository addressRepository, ProductRepository productRepository,
@@ -106,14 +112,10 @@ public class AddressService {
     }
     if (sortField != null || sort != null) {
       dtos.sort(Comparator.comparing(reflectiveGetter(sortField)));
-      dtos.forEach(e -> System.out.println(e.getTotalProductAvailable()));
       if (Objects.equals(sort, "desc")) {
         dtos = Lists.reverse(dtos);
-        System.out.println("reverse");
-        dtos.forEach(e -> System.out.println(e.getTotalProductAvailable()));
       }
     }
-    System.out.println(dtos.size());
     dtos = dtos.stream()
         .filter(address -> address.getId() != null)
         .skip((long) dataPerPage * (pageNum - 1))
@@ -121,7 +123,6 @@ public class AddressService {
         .collect(Collectors.toList());
     PageAddressDto pageAddressDto = new PageAddressDto();
     Map<String, Integer> pageInfo = new HashMap<>();
-    System.out.println(dtos.size());
     int totalData = list.size();
 //    (total + dataPerPage - 1) / dataPerPage
     int lastPage = (totalData + dataPerPage - 1) / dataPerPage;
@@ -161,16 +162,18 @@ public class AddressService {
       Double num2)
       throws AddressNotExistException {
     List<Product> list;
-    if (num1 == null && num2 == null || num1 == 0
-        && num2 == 0) {
-      list = productRepository.getByAddress(addressId);
-    } else {
-      list = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
-    }
-    System.out.println(list);
-    if (list == null) {
-      throw new AddressNotExistException("Address not exist");
-    }
+    Address address = getById(addressId);
+    Set<AddressPoint> addressPoints = address.getAddressPoints();
+
+    Double start=num1 == null ? 0 : num1;
+    Double end=num2 == null ? 0 : num2;
+
+    if(addressPoints.size()<2){
+      start=addressPoints.iterator().next().getNumber();
+      end= Iterables.getLast(addressPoints).getNumber();}
+
+    list = productRepository.findByAddressIdAndPoint(addressId, start, end);
+
     if (categoryId != null) {
       list = list.stream().filter(product -> Objects.equals(product.getCategory().getId(),
               categoryId))
@@ -186,7 +189,7 @@ public class AddressService {
 
     AddressDetaildto addressDetaildto = new AddressDetaildto();
 
-    addressDetaildto.setAddress(getById(addressId));
+    addressDetaildto.setAddress(address);
     addressDetaildto.setProduct(list);
     return addressDetaildto;
   }
@@ -196,12 +199,18 @@ public class AddressService {
       throws AddressNotExistException {
     List<Product> list;
     Address address = getById(addressId);
-    if (num1 == null && num2 == null || num1 == 0
-        && num2 == 0) {
-      list = productRepository.getByAddress(addressId);
-    } else {
-      list = productRepository.findByAddressIdAndPoint(addressId, num1, num2);
-    }
+    Set<AddressPoint> addressPoints = address.getAddressPoints();
+    Double start=num1 == null ? 0 : num1;
+    Double end=num2 == null ? 0 : num2;
+
+    if(addressPoints.size()<2){
+      start=addressPoints.iterator().next().getNumber();
+      end= Iterables.getLast(addressPoints).getNumber();}
+
+      list = productRepository.findByAddressIdAndPoint(addressId, start, end);
+
+
+
 
     if (categoryId != null) {
       list = list.stream().filter(product -> Objects.equals(product.getCategory().getId(),
@@ -216,13 +225,12 @@ public class AddressService {
           .collect(Collectors.toList());
     }
     AddressDetaildto addressDetaildto = new AddressDetaildto();
-    if (list == null || list.size() == 0) {
+    if (list == null ) {
       throw new AddressNotExistException("Đường không có trụ nào");
     }
 
     Set<Product> wishlist = user.getWishlist();
     List<CartItem> cart = cartItemService.getCartByUser(user);
-    System.out.println(list);
     addressDetaildto.setAddress(address);
     list.forEach(product -> {
       if (wishlist.contains(product)) {

@@ -13,6 +13,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
   @Query("SELECT p FROM Product p WHERE p.address.id = ?1")
   List<Product> getByAddress(Integer addressId);
 
+  @Query("SELECT p FROM Product p WHERE p.address.id = ?1 AND p.number > ?2 AND p.number < 3")
+  List<Product> getByAddressAndByPoints(Integer addressId, Double number1, Double number2);
+
 
   @Query("SELECT p FROM Product p WHERE p.name LIKE %?1% " +
       "OR p.price = ?1 " +
