@@ -164,14 +164,16 @@ public class AddressService {
     List<Product> list;
     Address address = getById(addressId);
     Set<AddressPoint> addressPoints = address.getAddressPoints();
+    Double start = 0.0;
+    Double end = 0.0;
 
-    Double start=num1 == null ? 0 : num1;
-    Double end=num2 == null ? 0 : num2;
-
-    if(addressPoints.size()>2){
+    if(addressPoints.size()>2 &&num1==null && num2==null){
       start=addressPoints.iterator().next().getNumber();
       end= Iterables.getLast(addressPoints).getNumber();}
-
+    if(num1!=null && num2!=null){
+      start=num1;
+      end=num2;
+    }
     list = productRepository.findByAddressIdAndPoint(addressId, start, end);
 
     if (categoryId != null) {
@@ -210,7 +212,6 @@ public class AddressService {
       start=num1;
       end=num2;
     }
-
       list = productRepository.findByAddressIdAndPoint(addressId, start, end);
 
 
