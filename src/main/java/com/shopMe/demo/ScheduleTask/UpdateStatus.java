@@ -1,6 +1,8 @@
 package com.shopMe.demo.ScheduleTask;
 
+import com.shopMe.demo.Order.Order;
 import com.shopMe.demo.Order.OrderRepository;
+import com.shopMe.demo.Order.OrderService;
 import com.shopMe.demo.OrderDetail.OrderDetail;
 import com.shopMe.demo.OrderDetail.OrderDetailRepository;
 import com.shopMe.demo.OrderDetail.OrderDetailService;
@@ -43,17 +45,17 @@ public class UpdateStatus {
 
   UserService userService;
 
+  OrderService orderService;
+
   WishListService wishListService;
 
   Date today = new Date();
-
-  NotificationService notificationService;
 
   @Autowired
   public UpdateStatus(ProductRepository productRepository,
       OrderDetailRepository orderDetailRepository, OrderRepository orderRepository,
       SettingService settingService, OrderDetailService orderDetailService,
-      UserService userService, WishListService wishListService) {
+      UserService userService, WishListService wishListService, OrderService orderService) {
     this.productRepository = productRepository;
     this.orderDetailRepository = orderDetailRepository;
     this.orderRepository = orderRepository;
@@ -61,6 +63,7 @@ public class UpdateStatus {
     this.orderDetailService = orderDetailService;
     this.userService = userService;
     this.wishListService = wishListService;
+    this.orderService = orderService;
   }
 
   public void SendEmailToUserThatHasProductExpiring() throws UserNotFoundException {
@@ -86,8 +89,14 @@ public class UpdateStatus {
             .filter(o -> o.getProduct().getExpiredDate() == null)
             .collect(Collectors.groupingBy(WishList::getUser));
     for (Map.Entry<User, List<WishList>> entry : result.entrySet()) {
-      //create product template send email
-//      sendEmail(user.getEmail(), entry.getValue());
+      sendEmailWishList(entry.getKey().getEmail(), entry.getValue());
+    }
+  }
+
+  public void cancelOrder(){
+    List<Order> orderList = orderRepository.getOrderHaveNotPaid(new Date());
+    for (Order order : orderList) {
+      orderService.cancelled(order);
     }
   }
 
@@ -139,6 +148,33 @@ public class UpdateStatus {
         "<p><strong>&nbsp;</strong></p>";
 
     String content = content1 + content3;
+    MimeMessage message = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+    try {
+      helper.setFrom(emailSetting.getFromAddress(), emailSetting.getSenderName());
+      helper.setTo(email);
+      helper.setSubject(subject);
+      helper.setText(content, true);
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+    mailSender.send(message);
+  }
+
+
+  private void sendEmailWishList(String email, List<WishList> wishListList) {
+    EmailSettingBag emailSetting = settingService.getEmailSettings();
+    JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
+
+    String subject = "Trụ mà bạn đã theo dõi có thể thuê";
+    String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">"
+        + "Một số trụ từ đơn hàng" + "</span> sắp hết hạn cho thuê!</h1>\n" +
+        "<h2 style=\"color: #2e6c80;\">Thông tin trụ:</h2>";
+    StringBuilder content2 = new StringBuilder();
+//    for (WishList o : wishListList) {
+
+
+    String content = content1;
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
     try {

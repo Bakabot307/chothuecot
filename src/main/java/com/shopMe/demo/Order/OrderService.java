@@ -48,7 +48,7 @@ public class OrderService {
   private final ProductRepository productRepository;
 
 
-  private final UpdateStatus updateStatus;
+
 
 
   private final CartItemRepository cartItemRepository;
@@ -61,17 +61,17 @@ public class OrderService {
 
   @Autowired
   public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository,
-      ProductRepository productRepository, UpdateStatus updateStatus,
+      ProductRepository productRepository,
       CartItemRepository cartItemRepository, OrderDetailService orderDetailService,
       SimpMessagingTemplate simpMessagingTemplate, NotificationService notificationService) {
     this.orderRepository = orderRepository;
     this.orderDetailRepository = orderDetailRepository;
     this.productRepository = productRepository;
-    this.updateStatus = updateStatus;
     this.cartItemRepository = cartItemRepository;
     this.orderDetailService = orderDetailService;
     this.simpMessagingTemplate = simpMessagingTemplate;
     this.notificationService = notificationService;
+
   }
 
   public Order createOrder(User user, List<CartItem> cartItems) {

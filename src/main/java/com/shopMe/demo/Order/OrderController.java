@@ -344,7 +344,6 @@ public class OrderController {
   @Async
   @GetMapping(value = "/start_cool_down")
   public void executeTask(@RequestParam Integer orderId) {
-    System.out.println("cool down");
     ScheduledExecutorService scheduler =
         Executors.newScheduledThreadPool(1);
     ///cancel order
@@ -355,10 +354,10 @@ public class OrderController {
       }
     };
     final ScheduledFuture<?> cancelHandler =
-        scheduler.scheduleAtFixedRate(cancelOrder, 20, 60 * 60, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(cancelOrder, 60*60, 60 * 60, TimeUnit.SECONDS);
     scheduler.schedule(() -> {
       cancelHandler.cancel(true);
-    }, 21, TimeUnit.SECONDS);
+    }, 60*61, TimeUnit.SECONDS);
   }
 
   @PostMapping("/extend_order_payment_time/{id}")

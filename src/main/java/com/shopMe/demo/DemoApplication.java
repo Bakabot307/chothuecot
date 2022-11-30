@@ -35,6 +35,7 @@ public class DemoApplication {
     this.userService = userService;
     this.passwordEncoder = passwordEncoder;
     this.simpMessagingTemplate = simpMessagingTemplate;
+
   }
 
   public static void main(String[] args) {
@@ -61,18 +62,17 @@ public class DemoApplication {
           new Date(), true);
 
       admin.addRole(adminRole);
-      System.out.println("admin: " + admin.getId() + admin.getPassword());
       userService.save2(admin);
     }
   }
 
-  @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Ho_Chi_Minh")
+  @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Ho_Chi_Minh")
   public void autoSendEmail() throws UserNotFoundException {
     update.SendEmailToUserThatHasProductExpiring();
-    System.out.println("sent email for products");
+    update.SendEmailToUserThatHasProductInWishlist();
+    update.cancelOrder();
   }
 
-  //add schedule for place_order
   //add schedule for wishlist
 }
 
