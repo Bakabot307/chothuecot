@@ -94,7 +94,7 @@ public class AddressController {
       }
     }
     addressService.save(savedAddress);
-    return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm thành công"), HttpStatus.CREATED);
   }
 
   @PutMapping("/admin/address/edit")
@@ -114,7 +114,7 @@ public class AddressController {
       AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
     }
     addressService.save(editAddress);
-    return new ResponseEntity<>(new ApiResponse(true, "edited successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ApiResponse(true, "Cập nhật thành công"), HttpStatus.CREATED);
   }
 
   @DeleteMapping("/admin/address/delete")
@@ -123,7 +123,7 @@ public class AddressController {
     String addressDir = "address-images/" + id;
     AmazonS3Util.removeFolder(addressDir);
     addressService.delete(id);
-    return new ResponseEntity<>(new ApiResponse(true, "deleted successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã xóa thành công"), HttpStatus.CREATED);
   }
 
 

@@ -19,6 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
 
   @Query("SELECT o FROM Order o WHERE  o.orderCode like %?1% "
+      + "OR o.id = ?1 "
       + "OR o.user.firstName like %?1% "
       + "OR o.user.lastName like %?1% "
       + "OR o.user.phoneNumber like %?1% ")

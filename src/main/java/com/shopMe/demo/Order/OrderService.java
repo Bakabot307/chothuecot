@@ -138,7 +138,7 @@ public class OrderService {
           }
           return order.getStatus() == status;
         })
-        .sorted(Comparator.comparing(Order::getOrderTime, Comparator.nullsLast(
+        .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsFirst(
             Comparator.naturalOrder())).reversed().thenComparing(Order::getStatus)).toList();
 
     List<OrderResponseDto> listOrderDto = new ArrayList<>();
@@ -167,27 +167,31 @@ public class OrderService {
     if (status == null && keyword == null) {
       orders = orderRepository.findAll().stream()
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing((Order::getOrderTime)))
+          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+              Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
 
     } else if (status != null && keyword != null) {
       orders = orderRepository.findByStatusAndKeyword(keyword).stream()
           .filter(o -> o.getStatus() == status)
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing((Order::getOrderTime)))
+          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+              Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
     } else if (status != null) {
       orders = orderRepository.findAll().stream()
           .filter(Objects::nonNull)
           .filter(o -> o.getStatus() == status)
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing((Order::getOrderTime)))
+          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+              Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
     } else {
       orders = orderRepository.findByStatusAndKeyword(keyword)
           .stream()
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing((Order::getOrderTime))).collect(Collectors.toList());
+          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+              Comparator.naturalOrder())).reversed()).toList();
     }
     for (Order order : orders) {
       OrderAdminDto orderAdminDto = new OrderAdminDto(order);
@@ -219,7 +223,6 @@ public class OrderService {
       throw new OrderNotFoundException("Đơn hàng không tồn tại");
     }
     return order.get();
-
   }
 
 
@@ -228,14 +231,17 @@ public class OrderService {
   }
 
   public void confirm(Order order) {
-//    List<OrderDetail> listDetail = orderDetailRepository.findByOrderId(order.getId());
+
     Date confirmDate = new Date();
     order.setConfirmedTime(confirmDate);
-    System.out.println("new");
-//    for (OrderDetail orderDetail : listDetail) {
-//      orderDetail.setExpiredDate(Helper.PlusMonth(confirmDate, orderDetail.getMonth()));
-//      orderDetail.setStartDate(confirmDate);
-//    }
+    if(order.getOrderType() == OrderStatus.NEW){
+      List<OrderDetail> listDetail = orderDetailRepository.findByOrderId(order.getId());
+      for (OrderDetail orderDetail : listDetail) {
+        orderDetail.setExpiredDate(Helper.PlusMonth(confirmDate, orderDetail.getMonth()));
+        orderDetail.setStartDate(confirmDate);
+      }
+    }
+
 
     OrderTrack track = new OrderTrack();
     track.setOrder(order);
@@ -410,47 +416,4 @@ public class OrderService {
     simpMessagingTemplate.convertAndSend("/notification/public", notification2);
   }
 
-//  public Order preOrder(User user, List<CartItem> cartItems) {
-//    Order order = new Order();
-//    Date today = new Date();
-//
-//    order.setOrderTime(today);
-//    order.setUser(user);
-//    order.setQuantity(cartItems.size());
-//
-//    order.setOrderCode(generateOrderCode(user.getId(), "O"));
-//    Set<OrderDetail> orderDetails = order.getOrderDetail();
-//    for (CartItem cartItem : cartItems) {
-//      Product product = cartItem.getProduct();
-//      OrderDetail orderDetail = new OrderDetail();
-//      orderDetail.setOrders(order);
-//      orderDetail.setProduct(product);
-//      orderDetail.setMonth(cartItem.getMonth());
-//      if (product.getExpiredDate() == null) {
-//        orderDetail.setExpiredDate(Helper.PlusMonth(today, cartItem.getMonth()));
-//        orderDetail.setStartDate(today);
-//      } else {
-//        orderDetail.setExpiredDate(Helper.PlusMonth(product.getExpiredDate(), cartItem.getMonth()));
-//        orderDetail.setStartDate(product.getExpiredDate());
-//      }
-//      orderDetails.add(orderDetail);
-//    }
-//    order.setTotal(calculateProductCost(orderDetails));
-//    OrderTrack track = new OrderTrack();
-//    track.setOrder(order);
-//    track.setStatus(OrderStatus.PREORDER);
-//    track.setNotes(OrderStatus.PREORDER.defaultDescription());
-//    track.setUpdatedTime(new Date());
-//
-//    order.getOrderTracks().add(track);
-//    order.setCancelTime(Helper.PlusHour(today, 1));
-//    Order orderSaved = orderRepository.save(order);
-//    Notification notification = new Notification("Đơn hàng " + orderSaved.getId() + " mới được đặt",
-//        new Date(), MessageType.ORDER,
-//        false, orderSaved.getId(), null);
-//    Notification notification2 = notificationService.addNotification2(notification);
-//    simpMessagingTemplate.convertAndSend("/notification/public", notification2);
-//
-//    return order;
-//  }
 }
