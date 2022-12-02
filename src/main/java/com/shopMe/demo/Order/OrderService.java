@@ -164,7 +164,10 @@ public class OrderService {
   public List<OrderAdminDto> findByStatus(OrderStatus status, String keyword,Date fromDate, Date toDate) {
     List<OrderAdminDto> list = new ArrayList<>();
     List<Order> orders;
-    if (status == null && keyword == null) {
+    if(Objects.equals(keyword, "")){
+      keyword = null;
+    }
+    if (status == null && keyword == null ) {
       orders = orderRepository.findAll().stream()
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
           .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
