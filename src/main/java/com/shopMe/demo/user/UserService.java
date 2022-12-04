@@ -257,6 +257,9 @@ public class UserService {
   public void changePassword(Integer id, String password, String newPassword)
       throws UserNotFoundException {
     User user = findById(id);
+    if(newPassword.length() < 8){
+      throw new UserNotFoundException("Mật khẩu phải có ít nhất 8 ký tự");
+    }
     if (!passwordEncoder.matches(password, user.getPassword())) {
       throw new UserNotFoundException("Mật khẩu cũ không chính xác, vui lòng nhập lại");
     } else {
