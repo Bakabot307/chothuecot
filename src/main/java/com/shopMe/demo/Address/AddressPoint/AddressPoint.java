@@ -86,4 +86,13 @@ public class AddressPoint {
   public void setNumber(Double number) {
     this.number = number;
   }
+
+  @Override
+  public String toString() {
+    return '{' +
+        "\"id\":" + id +
+        ", \"name\":\"" + name + '\"' +
+        "\"number\":" + number +
+        '}';
+  }
 }
