@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shopMe.demo.Address.Address;
+import com.shopMe.demo.Address.AddressPoint.AddressPoint;
 import com.shopMe.demo.Category.Category;
 import com.shopMe.demo.OrderDetail.OrderDetail;
 import com.shopMe.demo.Product.dto.AddProductDto;
@@ -12,9 +13,12 @@ import com.shopMe.demo.common.Constants;
 import com.shopMe.demo.user.User;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -94,6 +98,9 @@ public class Product {
   @Transient
   private boolean isInWishList;
 
+  @Transient
+  private Set<AddressPoint> points;
+
 
   @JsonIgnore
   @ManyToMany(mappedBy = "wishlist")
@@ -108,6 +115,22 @@ public class Product {
     }
   }
 
+  public Set<AddressPoint> getPoints() {
+    if (address != null) {
+    Set<AddressPoint> list = address.getAddressPoints().stream().sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
+        Collectors.toCollection(LinkedHashSet::new));
+    int min =(int) (number -0.5);
+    int max =(int) (number +0.5);
+      list = list.stream().filter(point -> point.getNumber() == min || point.getNumber() == max)
+          .collect(
+              Collectors.toSet());
+      return list;
+    } else {
+      return null;
+    }
+
+
+  }
 
   public Product() {
   }

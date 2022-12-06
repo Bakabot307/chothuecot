@@ -1,5 +1,6 @@
 package com.shopMe.demo.CartItem;
 
+import com.shopMe.demo.Address.AddressPoint.AddressPoint;
 import com.shopMe.demo.CartItem.dto.CartItemDto;
 import com.shopMe.demo.CartItem.dto.MapDto;
 import com.shopMe.demo.Product.Product;
@@ -13,6 +14,7 @@ import com.shopMe.demo.user.UserService;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -128,9 +130,9 @@ public class CartItemController {
 
   @RolesAllowed("ROLE_USER")
   @GetMapping("/")
-  public ResponseEntity<List<CartItem>> getCart() {
+  public ResponseEntity<Map<Set<AddressPoint>,List<CartItem>>> getCart() {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    List<CartItem> list = cartItemService.getCartByUser(user);
+    Map<Set<AddressPoint>,List<CartItem>> list = cartItemService.getCartCombo(user);
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 }

@@ -1,6 +1,7 @@
 package com.shopMe.demo.Address.AddressPoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.shopMe.demo.Address.Address;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -92,7 +93,9 @@ public class AddressPoint {
     return '{' +
         "\"id\":" + id +
         ", \"name\":\"" + name + '\"' +
-        "\"number\":" + number +
+        ", \"number\":" + number +
+        ", \"addressId\":" + address.getId() +
+        ", \"addressName\":\"" + address.getStreet() + '\"' +
         '}';
   }
 }

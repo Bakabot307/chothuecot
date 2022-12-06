@@ -190,7 +190,6 @@ public class AddressService {
     }
 
     AddressDetaildto addressDetaildto = new AddressDetaildto();
-
     addressDetaildto.setAddress(address);
     addressDetaildto.setProduct(list);
     return addressDetaildto;
@@ -213,9 +212,6 @@ public class AddressService {
       end=num2;
     }
       list = productRepository.findByAddressIdAndPoint(addressId, start, end);
-
-
-
 
     if (categoryId != null) {
       list = list.stream().filter(product -> Objects.equals(product.getCategory().getId(),

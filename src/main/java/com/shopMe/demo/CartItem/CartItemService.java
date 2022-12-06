@@ -1,5 +1,7 @@
 package com.shopMe.demo.CartItem;
 
+import com.shopMe.demo.Address.AddressPoint.AddressPoint;
+import com.shopMe.demo.CartItem.dto.CartDto;
 import com.shopMe.demo.Product.Product;
 import com.shopMe.demo.Product.ProductRepository;
 import com.shopMe.demo.Product.ProductStatus;
@@ -9,6 +11,8 @@ import com.shopMe.demo.exceptions.ShoppingCartException;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserService;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +80,16 @@ public class CartItemService {
   public List<CartItem> getCartByUser(User user) {
     List<CartItem> list = cartItemRepository.findByUser(user);
     return list;
+  }
+
+  public  Map<Set<AddressPoint>,List<CartItem>> getCartCombo(User user) {
+    List<CartItem> list = cartItemRepository.findByUser(user);
+    Map<Set<AddressPoint>,List<CartItem>> map = list.stream()
+        .collect(Collectors.groupingBy(cartItem -> cartItem.getProduct().getPoints()));
+    map = map.entrySet().stream()
+        .sorted(Map.Entry.comparingByValue((o1, o2) -> o2.size() - o1.size()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    return map;
   }
 
   public List<CartItem> getCartByUserHasProductAvailable(User user) {
