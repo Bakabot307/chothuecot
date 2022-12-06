@@ -86,9 +86,6 @@ public class CartItemService {
     List<CartItem> list = cartItemRepository.findByUser(user);
     Map<Set<AddressPoint>,List<CartItem>> map = list.stream()
         .collect(Collectors.groupingBy(cartItem -> cartItem.getProduct().getPoints()));
-    map = map.entrySet().stream()
-        .sorted(Map.Entry.comparingByValue((o1, o2) -> o2.size() - o1.size()))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     return map;
   }
 

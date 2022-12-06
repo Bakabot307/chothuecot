@@ -119,8 +119,8 @@ public class Product {
     if (address != null) {
     Set<AddressPoint> list = address.getAddressPoints().stream().sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
         Collectors.toCollection(LinkedHashSet::new));
-    int min =(int) (number -0.5);
-    int max =(int) (number +0.5);
+    int min =number.intValue();
+    int max =min + 1;
       list = list.stream().filter(point -> point.getNumber() == min || point.getNumber() == max)
           .collect(
               Collectors.toSet());
