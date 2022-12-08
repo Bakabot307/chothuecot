@@ -86,13 +86,14 @@ public class OrderController {
   public OrderController(CartItemService cartItemService, OrderService orderService,
       OrderDetailService orderDetailService, SettingService settingService, ScheduledTasks schedule,
       ScheduledAnnotationBeanPostProcessor postProcessor,
-      UpdateOrderStatusTask task1, SimpMessagingTemplate simpMessagingTemplate) {
+      UpdateOrderStatusTask task1, SimpMessagingTemplate simpMessagingTemplate,UserRepository userRepository) {
     this.cartItemService = cartItemService;
     this.orderService = orderService;
     this.orderDetailService = orderDetailService;
     this.settingService = settingService;
     this.schedule = schedule;
     this.simpMessagingTemplate = simpMessagingTemplate;
+    this.userRepository = userRepository;
   }
 
   @RolesAllowed("ROLE_USER")

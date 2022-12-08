@@ -39,6 +39,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
       + "INNER JOIN WishList w ON p.id = w.product.id "
       + "INNER JOIN User u ON w.user.id = u.id")
   List<WishList> findAllWishList();
-@Query("SELECT u FROM User u JOIN Role r  WHERE r.name = ?1")
+@Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = ?1")
   List<User> getAllByRole(String role);
 }
