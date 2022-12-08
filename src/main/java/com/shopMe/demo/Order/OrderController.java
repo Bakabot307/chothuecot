@@ -21,6 +21,7 @@ import com.shopMe.demo.exceptions.OrderNotFoundException;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserRepository;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -293,10 +294,13 @@ public class OrderController {
     EmailSettingBag emailSetting = settingService.getEmailSettings();
     JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
     User user = userRepository.getAllByRole("ROLE_ADMIN").stream().findAny().get();
-
-    String subject = "Có đơn hàng mới vừa được đặt " + order.getId() + " from ChoThueCot.com";
-    String content = "Có đơn hàng mới vừa được đặt " + order.getId() + " from ChoThueCot.com"
-        + "  \"<p>Click <a hef="+siteURL+"/admin/orderPlace"+" style=\\\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\\\">đây</a> để xem đơn hàng!</p>\\n\"";
+    long totalL = (long) order.getTotal();
+    String total = Long.toString(totalL);
+    String subject = "You have new order " + order.getId() + " from ChoThueCot.com";
+    String content = "You have new order " + order.getId() + " from ChoThueCot.com" +
+     "<p><strong>QUANTITY: " + order.getQuantity() + " </strong><br /><strong>TOTAL: "
+        + total + " </strong></p>\n" +
+        "<p>Click <a href="+siteURL+"/admin/orderPlace"+" style=\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\">here</a> to check the order!</p>";
 
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -305,6 +309,7 @@ public class OrderController {
     helper.setTo(user.getEmail());
     helper.setSubject(subject);
     helper.setText(content, true);
+
     mailSender.send(message);
   }
   private void sendEmailForRequest(String email, Order order)
