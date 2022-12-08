@@ -19,6 +19,7 @@ import com.shopMe.demo.config.Helper;
 import com.shopMe.demo.exceptions.OrderCantExtendException;
 import com.shopMe.demo.exceptions.OrderNotFoundException;
 import com.shopMe.demo.user.User;
+import com.shopMe.demo.user.UserRepository;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -74,7 +76,11 @@ public class OrderController {
   private ScheduledFuture scheduledFuture;
 
   private SimpMessagingTemplate simpMessagingTemplate;
+
+  private UserRepository userRepository;
   // Tasks
+  @Value("${site.url}")
+  private String siteURL;
 
   @Autowired
   public OrderController(CartItemService cartItemService, OrderService orderService,
@@ -91,7 +97,8 @@ public class OrderController {
 
   @RolesAllowed("ROLE_USER")
   @PostMapping("/place_order")
-  public ResponseEntity<ApiResponse> createOrder() {
+  public ResponseEntity<ApiResponse> createOrder()
+      throws MessagingException, UnsupportedEncodingException {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     List<CartItem> cartItems = cartItemService.getCartByUserHasProductAvailable(user);
     List<String> listName = new ArrayList<>();
@@ -113,8 +120,8 @@ public class OrderController {
           HttpStatus.BAD_REQUEST);
     } else {
       Order order = orderService.createOrder(user, cartItems);
-
       cartItemService.deleteByUser(user);
+      sendEmailToAdmin(order);
       return new ResponseEntity<>(
           new ApiResponse(true, "Đơn hàng [" + order.getId() + "] đã đặt thành công"),
           HttpStatus.OK);
@@ -265,7 +272,7 @@ public class OrderController {
   @PutMapping("/extend_order")
   public ResponseEntity<ApiResponse> extendOrder(
       @RequestBody Reorder reorder
-  ) throws OrderCantExtendException {
+  ) throws OrderCantExtendException, MessagingException, UnsupportedEncodingException {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     Order order = orderService.extendOrder(reorder, user);
@@ -273,13 +280,32 @@ public class OrderController {
       return new ResponseEntity<>(new ApiResponse(true, "Gia hạn đơn hàng không thành công"),
           HttpStatus.BAD_REQUEST);
     } else {
+      sendEmailToAdmin(order);
       return new ResponseEntity<>(
           new ApiResponse(true, "Đơn hàng gia hạn" + order.getId() + " đã được tạo thành công"),
           HttpStatus.OK);
     }
   }
 
+  private void sendEmailToAdmin(Order order)
+      throws MessagingException, UnsupportedEncodingException {
+    EmailSettingBag emailSetting = settingService.getEmailSettings();
+    JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
+    User user = userRepository.getAllByRole("ROLE_ADMIN").stream().findAny().get();
 
+    String subject = "Có đơn hàng mới vừa được đặt " + order.getId() + " from ChoThueCot.com";
+    String content = "Có đơn hàng mới vừa được đặt " + order.getId() + " from ChoThueCot.com"
+        + "  \"<p>Click <a hef="+siteURL+"/admin/orderPlace"+" style=\\\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\\\">đây</a> để xem đơn hàng!</p>\\n\"";
+
+    MimeMessage message = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message);
+
+    helper.setFrom(emailSetting.getFromAddress(), emailSetting.getSenderName());
+    helper.setTo(user.getEmail());
+    helper.setSubject(subject);
+    helper.setText(content, true);
+    mailSender.send(message);
+  }
   private void sendEmailForRequest(String email, Order order)
       throws MessagingException, UnsupportedEncodingException {
     EmailSettingBag emailSetting = settingService.getEmailSettings();
@@ -325,8 +351,6 @@ public class OrderController {
         "<p><strong>&nbsp;</strong></p>\n" +
         "<p><strong>QUANTITY: " + order.getQuantity() + " </strong><br /><strong>TOTAL: "
         + order.getTotal() + " </strong></p>\n" +
-        "<p>Click <a style=\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\">Here</a> to check your order!</p>\n"
-        +
         "<p><strong>Enjoy!</strong></p>\n" +
         "<p><strong>&nbsp;</strong></p>";
 
