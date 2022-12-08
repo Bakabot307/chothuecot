@@ -43,8 +43,6 @@ public class CartItemService {
       throw new ShoppingCartException("product is already in cart");
     } else {
       cartItemRepository.save(cart);
-      template.convertAndSendToUser(cart.getUser().getId().toString(), "/private",
-          "cart");
     }
 
   }

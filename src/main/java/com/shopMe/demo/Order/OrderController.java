@@ -296,8 +296,8 @@ public class OrderController {
     User user = userRepository.getAllByRole("ROLE_ADMIN").stream().findAny().get();
     long totalL = (long) order.getTotal();
     String total = Long.toString(totalL);
-    String subject = "You have new order " + order.getId() + " from ChoThueCot.com";
-    String content = "You have new order " + order.getId() + " from ChoThueCot.com" +
+    String subject = "You have new order " + order.getId() + " from "+siteURL;
+    String content = "You have new order " + order.getId() + " from "+siteURL+
      "<p><strong>QUANTITY: " + order.getQuantity() + " </strong><br /><strong>TOTAL: "
         + total + " </strong></p>\n" +
         "<p>Click <a href="+siteURL+"/admin/orderPlace"+" style=\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\">here</a> to check the order!</p>";
@@ -318,7 +318,7 @@ public class OrderController {
     JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
     List<OrderDetail> orderDetailList = orderDetailService.getOrderDetailByOrderId(order.getId());
 
-    String subject = "You have been ordered " + order.getId() + " from ChoThueCot.com";
+    String subject = "You have been ordered " + order.getId() + " "+siteURL;
 
     String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">"
         + order.getId() + "</span> has been requested!</h1>\n" +
@@ -357,7 +357,9 @@ public class OrderController {
         "<p><strong>&nbsp;</strong></p>\n" +
         "<p><strong>QUANTITY: " + order.getQuantity() + " </strong><br /><strong>TOTAL: "
         + order.getTotal() + " </strong></p>\n" +
-        "<p><strong>Enjoy!</strong></p>\n" +
+        "<p>Click <a href="+siteURL+"auth/order/"+order.getId()+" style=\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\">here</a> to check the order!</p>"+
+
+    "<p><strong>Enjoy!</strong></p>\n" +
         "<p><strong>&nbsp;</strong></p>";
 
     String content = content1 + content3;

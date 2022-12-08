@@ -81,28 +81,26 @@ public class CartItemController {
 
   @PostMapping("/addalltocart")
   @RolesAllowed("ROLE_USER")
-  public ResponseEntity<?> add(
+  public ResponseEntity<ApiResponse> add(
       @RequestBody MapDto mapDto)
       throws ShoppingCartException, ProductNotExistException {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     Map<Integer, Integer> map = mapDto.getProductInfo();
     List<Product> cartList  = cartItemService.getCartByUser(user).stream().map(CartItem::getProduct).toList();
-
+    System.out.println(mapDto.getProductInfo());
     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
       CartItem cart = new CartItem();
       Product product = productService.findById(entry.getKey());
-      cartList.stream().filter(p -> !Objects.equals(p.getId(), product.getId())).findFirst().ifPresent(p -> {
+      System.out.println(product.getId());
+    if (!cartList.contains(product)) {
         cart.setUser(user);
         cart.setProduct(product);
         cart.setMonth(entry.getValue());
-        try {
-          cartItemService.addCart(cart);
-        } catch (ShoppingCartException e) {
-          throw new RuntimeException(e);
-        }
-      });
+        System.out.println("ya");
+        cartItemService.addCart(cart);
+      }
     }
-    return ResponseEntity.ok().body(mapDto);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm thành công"), HttpStatus.OK);
   }
 
   @PutMapping("/update/{productId}")
