@@ -8,6 +8,7 @@ import com.shopMe.demo.user.UserNotFoundException;
 import com.shopMe.demo.user.UserService;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,12 @@ public class DemoApplication {
   UserService userService;
 
   PasswordEncoder passwordEncoder;
+
+  @Value("${admin.email}")
+  private String adminEmail;
+
+  @Value("${admin.phone}")
+  private String adminPhone;
 
 
   @Autowired
@@ -54,10 +61,10 @@ public class DemoApplication {
     if (adminRole == null) {
       adminRole = roleService.save(new Role("ROLE_ADMIN"));
     }
-
-    User user = userService.findByPhoneNumber("+84123456789");
+    System.out.println(adminEmail);
+    User user = userService.findByPhoneNumber(adminPhone);
     if (user == null) {
-      User admin = new User("admin", "quanlitru", "admin@gmail.com", "+84123456789", null,
+      User admin = new User("admin", "quanlitru", adminEmail, adminPhone, null,
           "123456789",
           new Date(), true);
 

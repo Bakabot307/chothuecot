@@ -87,20 +87,17 @@ public class CartItemController {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     Map<Integer, Integer> map = mapDto.getProductInfo();
     List<Product> cartList  = cartItemService.getCartByUser(user).stream().map(CartItem::getProduct).toList();
-    System.out.println(mapDto.getProductInfo());
     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
       CartItem cart = new CartItem();
       Product product = productService.findById(entry.getKey());
-      System.out.println(product.getId());
     if (!cartList.contains(product)) {
         cart.setUser(user);
         cart.setProduct(product);
         cart.setMonth(entry.getValue());
-        System.out.println("ya");
         cartItemService.addCart(cart);
       }
     }
-    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm thành công"), HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm tất cả vào giỏ thành công"), HttpStatus.OK);
   }
 
   @PutMapping("/update/{productId}")
