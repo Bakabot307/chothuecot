@@ -17,9 +17,9 @@ public class NotificationService {
         Comparator.comparing(Notification::getDate)
             .reversed());
     if (userId == null) {
-      return notifications.stream().filter(n -> n.getUserId() == null).toList();
+      return notificationRepository.findByUserId(null);
     } else {
-      return notifications.stream().filter(n -> n.getUserId() != null).toList();
+      return notificationRepository.findByUserId(userId);
     }
   }
 
