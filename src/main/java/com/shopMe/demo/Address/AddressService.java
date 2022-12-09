@@ -79,7 +79,9 @@ public class AddressService {
       String sort, String keyword) throws NoSuchFieldException {
     List<Address> list;
     if (keyword == null) {
-      list = (List<Address>) addressRepository.findAll();
+      list =  addressRepository.findAllBySize();
+      list = list.stream().filter(address -> address.getAddressPoints().size() >1).collect(
+          Collectors.toList());
     } else {
       list = addressRepository.search(keyword);
     }

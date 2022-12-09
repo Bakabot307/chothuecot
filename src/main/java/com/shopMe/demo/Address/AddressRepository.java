@@ -14,9 +14,15 @@ public interface AddressRepository extends PagingAndSortingRepository<Address, I
   Page<Address> findAllAddress(String keyword, Pageable pageable);
 
   @Query("SELECT distinct a from Address a JOIN fetch a.products p  WHERE "
-      + "a.street like %?1% "
+      + "size(a.addressPoints)>1 "
+      + "AND a.street like %?1% "
       + "OR a.city like %?1% "
-      + "OR p.name like %?1%"
+      + "OR p.name like %?1% "
   )
   List<Address> search(String keyword);
+
+  @Query("SELECT distinct a from Address a JOIN fetch a.products p  WHERE "
+      + "size(a.addressPoints)>1 "
+  )
+  List<Address> findAllBySize();
 }
