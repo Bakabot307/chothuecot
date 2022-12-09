@@ -38,11 +38,17 @@ public class WebImageService {
     }
 
     switch (category) {
-      case "banner" -> list = list.stream().limit(banner).toList();
-      case "about" -> list = list.stream().limit(about).toList();
-      case "logo" -> list = list.stream().limit(logo).toList();
-      default -> {
-      }
+     case "banner":
+       list = list.stream().limit(banner).toList();
+       break;
+      case "about":
+        list = list.stream().limit(about).toList();
+        break;
+      case "logo":
+        list = list.stream().limit(logo).toList();
+        break;
+      default:
+        break;
     }
 
     return list;
