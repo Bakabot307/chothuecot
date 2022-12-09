@@ -70,6 +70,9 @@ public class OverviewController {
       @RequestParam(required = false) String keyword
   ) throws ParseException {
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    if(format.parse(date1).after(format.parse(date2))){
+      return new ResponseEntity<>("Ngày bắt đầu phải nhỏ hơn", HttpStatus.BAD_REQUEST);
+    }
     OverviewProductDto test = overviewService.getProductHired(sort, format.parse(date1),
         format.parse(date2), page, dataPerPage, keyword);
     return new ResponseEntity<>(test, HttpStatus.OK);
