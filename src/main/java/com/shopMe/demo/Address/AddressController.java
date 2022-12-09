@@ -80,7 +80,7 @@ public class AddressController {
     Address newAddress = new Address(addressDto);
     Address savedAddress = addressService.save(newAddress);
 
-    if (multipartFile != null) {
+    if (multipartFile != null && !multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       savedAddress.setImage(fileName);

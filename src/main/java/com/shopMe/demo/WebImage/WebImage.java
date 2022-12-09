@@ -66,6 +66,8 @@ public class WebImage {
     this.active = active;
   }
 
+
+
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
