@@ -127,7 +127,7 @@ public class ProductService {
       AProductDto dto = new AProductDto(p);
       listForStreet.add(dto);
     }
-    return new PageImpl<>(listForStreet, pageable, totalProduct);
+    return new PageImpl<>(listForStreet, pageable, listForStreet.size());
   }
 
   public Page<Product> getProductByStatus(ProductStatus status, String sort, String sortField,
@@ -177,7 +177,7 @@ public class ProductService {
         if (sort.equals("desc")) {
           finalList = Lists.reverse(finalList);
         }
-        return new PageImpl<>(finalList, pageable, totalProduct);
+        return new PageImpl<>(finalList, pageable, finalList.size());
       }
 
       finalList = listWithNoKeyword.getContent()
@@ -185,7 +185,7 @@ public class ProductService {
           .collect(Collectors.toList());
 
     }
-    return new PageImpl<>(finalList, pageable, totalProduct);
+    return new PageImpl<>(finalList, pageable, finalList.size());
   }
 
   public CategoryDto getAllProductByCategory(
