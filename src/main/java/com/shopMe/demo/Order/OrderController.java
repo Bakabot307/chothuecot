@@ -406,11 +406,9 @@ public class OrderController {
     cal.set(Calendar.MILLISECOND, 999);
     Date today = cal.getTime();
     order.setCancelTime(today);
-    System.out.println(today + "today");
     if (Objects.equals(day, "tomorrow")) {
       order.setCancelTime(Helper.PlusDay(today, 1));
     }
-    System.out.println("extend");
     orderService.save(order);
   }
 }

@@ -118,7 +118,7 @@ public class ProductController {
     Product productDB = productService.findById(productDto.getId());
     if (productDB.getStatus() == ProductStatus.HIRING) {
       return new ResponseEntity<>(
-          new ApiResponse(false, "Product is being hired, can't change status"),
+          new ApiResponse(false, "Trụ đang được thuê không thể cập nhật"),
           HttpStatus.BAD_REQUEST);
     }
     double random = productDto.getNum1() + Math.random() * (productDto.getNum2()
@@ -149,7 +149,7 @@ public class ProductController {
     }
 
     productService.save(productDB);
-    return new ResponseEntity<>(new ApiResponse(true, "updated successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse(true, "cập nhật thành công"), HttpStatus.OK);
   }
 
 
@@ -157,10 +157,15 @@ public class ProductController {
   ResponseEntity<ApiResponse> delete(@PathVariable Integer productId)
       throws ProductNotExistException {
     Product product = productService.findById(productId);
+    if (product.getStatus() == ProductStatus.HIRING) {
+      return new ResponseEntity<>(
+          new ApiResponse(false, "Trụ đang được thuê không thể xóa"),
+          HttpStatus.BAD_REQUEST);
+    }
     String addressDir = "product-images/" + productId;
     AmazonS3Util.removeFolder(addressDir);
     productService.delete(product);
-    return new ResponseEntity<>(new ApiResponse(true, "deleted successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse(true, "xóa thành công"), HttpStatus.OK);
   }
 
   @GetMapping("/admin/product/page/{pageNum}")

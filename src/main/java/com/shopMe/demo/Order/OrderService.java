@@ -309,11 +309,11 @@ public class OrderService {
 
     List<Order> listOrder = findByUserId(user.getId());
     for (Order order : listOrder) {
-      if (order.getStatus().equals(OrderStatus.NEW)
-          || order.getStatus().equals(OrderStatus.EXTEND)
-          || order.getStatus().equals(OrderStatus.USER_CONFIRMED)) {
+      if (order.getOrderType().equals(OrderStatus.EXTEND)
+          && order.getStatus().equals(OrderStatus.EXTEND)
+          || order.getOrderType().equals(OrderStatus.EXTEND) && order.getStatus().equals(OrderStatus.USER_CONFIRMED)) {
         throw new OrderCantExtendException(
-            "Bạn đang có đơn hàng chưa thanh toán, vui lòng kiểm tra lại");
+            "Bạn đang có đơn hàng đang gia hạn chưa hoàn thành, vui lòng kiểm tra lại");
       }
     }
     float cost = 0.0f;

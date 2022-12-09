@@ -18,7 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   List<Order> findByUserAndAndHasNoParentOrder(Integer userId);
 
 
-  @Query("SELECT o FROM Order o WHERE  o.orderCode like %?1% "
+  @Query("SELECT o FROM Order o WHERE  concat(o.orderCode,'') like concat('%',?1, '%') "
       + "OR o.id = ?1 "
       + "OR o.user.firstName like %?1% "
       + "OR o.user.lastName like %?1% "
