@@ -127,7 +127,7 @@ public class ProductService {
       AProductDto dto = new AProductDto(p);
       listForStreet.add(dto);
     }
-    return new PageImpl<>(listForStreet, pageable, listForStreet.size());
+    return new PageImpl<>(listForStreet, pageable, totalProduct);
   }
 
   public Page<Product> getProductByStatus(ProductStatus status, String sort, String sortField,
@@ -146,7 +146,7 @@ public class ProductService {
     List<Product> finalList;
     if (keyword != null) {
       Page<Product> listWithKeyword = productRepository.findAllByKeyWord(keyword, pageable);
-      totalProduct = listWithKeyword.getTotalElements();
+
       finalList = listWithKeyword.getContent().stream().filter(p -> p.getStatus().equals(status))
           .collect(Collectors.toList());
       if (sortField.equals("street") || sortField.equals("city")) {
@@ -162,9 +162,10 @@ public class ProductService {
           finalList = Lists.reverse(finalList);
         }
       }
+      totalProduct = finalList.size();
     } else {
       Page<Product> listWithNoKeyword = productRepository.findAll(pageable);
-      totalProduct = listWithNoKeyword.getTotalElements();
+
       if (sortField.equals("street") || sortField.equals("city")) {
         finalList = listWithNoKeyword.getContent().stream()
             .filter(Objects::nonNull)
@@ -177,7 +178,8 @@ public class ProductService {
         if (sort.equals("desc")) {
           finalList = Lists.reverse(finalList);
         }
-        return new PageImpl<>(finalList, pageable, finalList.size());
+        totalProduct = finalList.size();
+        return new PageImpl<>(finalList, pageable, totalProduct);
       }
 
       finalList = listWithNoKeyword.getContent()
@@ -185,7 +187,7 @@ public class ProductService {
           .collect(Collectors.toList());
 
     }
-    return new PageImpl<>(finalList, pageable, finalList.size());
+    return new PageImpl<>(finalList, pageable, totalProduct);
   }
 
   public CategoryDto getAllProductByCategory(
