@@ -14,7 +14,8 @@ public class BankService {
   private BankRepository bankRepository;
 
   public void addBank(Bank bank) throws BankException {
-    Bank bankDb = bankRepository.findByBankCode(bank.getBankCode());
+    Bank bankDb = bankRepository.findByBankCodeOrBankName(bank.getBankCode(),
+        bank.getBankName());
     if (bankDb != null) {
       throw new BankException("Ngân hàng đã tồn tại");
     }
@@ -41,8 +42,7 @@ public class BankService {
 
   public void editBank(Bank bank) throws BankException {
     Bank bankDB = getBankById(bank.getId());
-
-    Bank bankDb = bankRepository.findByBankCode(bank.getBankCode());
+    Bank bankDb = bankRepository.findByBankCodeOrBankName(bank.getBankCode(),bank.getBankName());
     if (bankDb != null && !Objects.equals(bankDB.getId(), bank.getId())) {
       throw new BankException("Ngân hàng đã tồn tại");
     }
