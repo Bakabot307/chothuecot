@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "web_image")
@@ -18,10 +19,13 @@ public class WebImage {
   @Column
   private Integer id;
 
+  @NotNull(message = "Hình ảnh không được để trống")
   private String image;
+  @NotNull(message = "Category không được để trống")
   private String category;
 
-  private Integer orderNumber;
+  @Column(name = "active")
+  private boolean active;
 
   public WebImage() {
   }
@@ -54,12 +58,12 @@ public class WebImage {
     this.image = image;
   }
 
-  public Integer getOrderNumber() {
-    return orderNumber;
+  public boolean isActive() {
+    return active;
   }
 
-  public void setOrderNumber(Integer orderNumber) {
-    this.orderNumber = orderNumber;
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
   @Transient

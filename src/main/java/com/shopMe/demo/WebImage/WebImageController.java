@@ -4,6 +4,7 @@ import com.shopMe.demo.Amazon.AmazonS3Util;
 import com.shopMe.demo.common.ApiResponse;
 import com.shopMe.demo.exceptions.WebImageException;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,19 +54,20 @@ public class WebImageController {
 
   @PostMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateImage(@PathVariable("id") Integer id,
+      @RequestParam boolean active,
       MultipartFile image) throws IOException, WebImageException {
     WebImage wI = webImageService.getById(id);
+
     if (!image.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(image.getOriginalFilename()));
       wI.setImage(fileName);
-
       String uploadDir = "web-images/" + wI.getId();
-
       AmazonS3Util.removeFolder(uploadDir);
       AmazonS3Util.uploadFile(uploadDir, fileName, image.getInputStream());
     }
-    webImageService.addImage(wI);
+    wI.setActive(active);
+    webImageService.update(wI);
     return ResponseEntity.ok(new ApiResponse(true, "Upload hình ảnh thành công"));
   }
 
@@ -89,15 +91,7 @@ public class WebImageController {
 
   @GetMapping("/getAll")
   public ResponseEntity<List<WebImage>> getAll() {
-    List<WebImage> list = webImageService.getALl();
+    List<WebImage> list = webImageService.getALl().stream().sorted(Comparator.comparing(WebImage::getCategory)).toList();
     return ResponseEntity.ok(list);
-  }
-
-  @GetMapping("/pushToTop/{id}")
-  public ResponseEntity<ApiResponse> pushToTop(
-      @RequestParam String category,
-      @PathVariable int id) throws WebImageException {
-    webImageService.pushToTop(id, category);
-    return ResponseEntity.ok(new ApiResponse(true, "Đẩy lên đầu thành công"));
   }
 }

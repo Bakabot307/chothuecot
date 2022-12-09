@@ -3,59 +3,26 @@ package com.shopMe.demo.WebImage;
 import com.shopMe.demo.exceptions.WebImageException;
 import java.util.Comparator;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class WebImageService {
 
-  final int banner = 5;
-  final int about = 4;
-  final int logo = 1;
+  final long banner = 5;
+  final long about = 4;
+  final long logo = 1;
   @Autowired
   private WebImageRepository repo;
 
   public WebImage addImage(WebImage image) {
-    WebImage images = repo.findByProductThatHasOrder(image.getCategory()).stream().max(
-        Comparator.comparingInt(WebImage::getOrderNumber)).orElse(null);
+    image.setActive(false);
+    return repo.save(image);
+  }
 
-    switch (image.getCategory()) {
-      case "banner":
-        if (image.getOrderNumber() == null) {
-          if (images == null) {
-            image.setOrderNumber(1);
-          } else if (images.getOrderNumber() >= banner) {
-            image.setOrderNumber(null);
-          } else {
-            image.setOrderNumber(images.getOrderNumber() + 1);
-          }
-        }
-
-        break;
-      case "logo":
-        if (image.getOrderNumber() == null) {
-          if (images == null) {
-            image.setOrderNumber(1);
-          } else if (images.getOrderNumber() >= logo) {
-            image.setOrderNumber(null);
-          } else {
-            image.setOrderNumber(images.getOrderNumber() + 1);
-          }
-        }
-        break;
-      case "about":
-        if (image.getOrderNumber() == null) {
-          if (images == null) {
-            image.setOrderNumber(1);
-          } else if (images.getOrderNumber() >= about) {
-            image.setOrderNumber(null);
-          } else {
-            image.setOrderNumber(images.getOrderNumber() + 1);
-          }
-        }
-        break;
-    }
-
+  public WebImage update(WebImage image) {
     return repo.save(image);
   }
 
@@ -70,6 +37,14 @@ public class WebImageService {
       throw new WebImageException("Không tìm thấy hình ảnh");
     }
 
+    switch (category) {
+      case "banner" -> list = list.stream().limit(banner).toList();
+      case "about" -> list = list.stream().limit(about).toList();
+      case "logo" -> list = list.stream().limit(logo).toList();
+      default -> {
+      }
+    }
+
     return list;
   }
 
@@ -82,49 +57,11 @@ public class WebImageService {
   }
 
 
-  public void pushToTop(int id, String category) throws WebImageException {
-    List<WebImage> list = repo.findByProductThatHasOrder(category);
-    WebImage wI = getById(id);
-    wI.setOrderNumber(1);
+  public void setActive(Integer id){
+    WebImage wI = repo.findById(id).get();
+    wI.setActive(true);
     repo.save(wI);
-    switch (wI.getCategory()) {
-      case "banner":
-        list.forEach(w -> {
-          if (w.getId() != id) {
-            if (w.getOrderNumber() > banner) {
-              w.setOrderNumber(null);
-            } else {
-              w.setOrderNumber(w.getOrderNumber() + 1);
-            }
-            repo.save(w);
-          }
-        });
-        break;
-      case "logo":
-        list.forEach(w -> {
-          if (w.getId() != id) {
-            if (w.getOrderNumber() > logo) {
-              w.setOrderNumber(null);
-            } else {
-              w.setOrderNumber(w.getOrderNumber() + 1);
-            }
-            repo.save(w);
-          }
-        });
-      case "about":
-        list.forEach(w -> {
-          if (w.getId() != id) {
-            if (w.getOrderNumber() > about) {
-              w.setOrderNumber(null);
-            } else {
-              w.setOrderNumber(w.getOrderNumber() + 1);
-            }
-            repo.save(w);
-          }
-        });
-        break;
-    }
-
-
   }
+
+
 }
