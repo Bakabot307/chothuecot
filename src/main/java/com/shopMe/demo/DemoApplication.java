@@ -2,7 +2,7 @@ package com.shopMe.demo;
 
 import com.shopMe.demo.Role.RoleService;
 import com.shopMe.demo.ScheduleTask.UpdateStatus;
-import com.shopMe.demo.model.Role;
+import com.shopMe.demo.Role.Role;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserNotFoundException;
 import com.shopMe.demo.user.UserService;

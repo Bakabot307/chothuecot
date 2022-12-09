@@ -1,6 +1,6 @@
 package com.shopMe.demo.Security.jwt;
 
-import com.shopMe.demo.model.Role;
+import com.shopMe.demo.Role.Role;
 import com.shopMe.demo.user.User;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;

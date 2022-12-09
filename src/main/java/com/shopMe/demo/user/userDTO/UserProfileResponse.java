@@ -2,11 +2,9 @@ package com.shopMe.demo.user.userDTO;
 
 
 import com.shopMe.demo.user.User;
-import com.shopMe.demo.model.Role;
+import com.shopMe.demo.Role.Role;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class UserProfileResponse {

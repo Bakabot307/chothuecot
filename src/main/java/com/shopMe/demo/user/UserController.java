@@ -9,7 +9,7 @@ import com.shopMe.demo.Utility;
 import com.shopMe.demo.common.ApiResponse;
 import com.shopMe.demo.config.MessageStrings;
 import com.shopMe.demo.exceptions.CustomException;
-import com.shopMe.demo.model.Role;
+import com.shopMe.demo.Role.Role;
 import com.shopMe.demo.user.userDTO.SignInDto;
 import com.shopMe.demo.user.userDTO.SignInResponseDto;
 import com.shopMe.demo.user.userDTO.SignupDto;

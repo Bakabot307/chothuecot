@@ -1,6 +1,7 @@
-package com.shopMe.demo.model;
+package com.shopMe.demo.Role;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "roles")
@@ -10,6 +11,7 @@ public class Role {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotBlank(message = "Tên role không được để trống")
     @Column(name = "name")
     private String name;
 

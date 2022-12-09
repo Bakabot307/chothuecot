@@ -4,6 +4,7 @@ package com.shopMe.demo.Category;
 import com.shopMe.demo.common.ApiResponse;
 import com.shopMe.demo.exceptions.CategoryNotFoundException;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -45,14 +46,14 @@ public class CategoryController {
 
 
   @PostMapping("/admin/category/add")
-  public ResponseEntity<ApiResponse> add(@RequestBody Category category) {
+  public ResponseEntity<ApiResponse> add(@RequestBody @Valid Category category) {
 
     categoryService.save(category);
     return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
   }
 
   @PutMapping("/admin/category/edit")
-  public ResponseEntity<ApiResponse> edit(@RequestBody Category category)
+  public ResponseEntity<ApiResponse> edit(@RequestBody @Valid Category category)
       throws CategoryNotFoundException {
 
     Category editCate = categoryService.getById(category.getId());

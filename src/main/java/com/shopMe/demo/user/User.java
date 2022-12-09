@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shopMe.demo.Order.Order;
 import com.shopMe.demo.Product.Product;
 import com.shopMe.demo.common.Constants;
-import com.shopMe.demo.model.Role;
+import com.shopMe.demo.Role.Role;
 import com.shopMe.demo.user.userDTO.UpdateUserDto;
 import java.util.ArrayList;
 import java.util.Collection;
