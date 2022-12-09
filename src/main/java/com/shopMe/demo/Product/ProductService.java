@@ -162,27 +162,26 @@ public class ProductService {
           finalList = Lists.reverse(finalList);
         }
       }
+
       totalProduct = finalList.size();
     } else {
-      Page<Product> listWithNoKeyword = productRepository.findAll(pageable);
-
+      List<Product> listWithNoKeyword = (List<Product>) productRepository.findAll();
       if (sortField.equals("street") || sortField.equals("city")) {
-        finalList = listWithNoKeyword.getContent().stream()
+        finalList = listWithNoKeyword.stream()
             .filter(Objects::nonNull)
             .filter(p -> p.getStatus().equals(status))
-            .skip((long) dataPerPage * (pageNum - 1))
-            .limit(dataPerPage)
             .sorted((Comparator.comparing(p ->
                 p.getAddress().getStreetOrCity(sortField))))
             .collect(Collectors.toList());
         if (sort.equals("desc")) {
           finalList = Lists.reverse(finalList);
         }
+        System.out.println("final list" + finalList.size());
         totalProduct = finalList.size();
         return new PageImpl<>(finalList, pageable, totalProduct);
       }
 
-      finalList = listWithNoKeyword.getContent()
+      finalList = listWithNoKeyword
           .stream().filter(p -> p.getStatus().equals(status))
           .collect(Collectors.toList());
 
