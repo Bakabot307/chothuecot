@@ -28,6 +28,10 @@ public class WebImageController {
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addImage(@RequestParam String category,
       MultipartFile image) throws IOException {
+    if(Objects.isNull(image) || Objects.equals(category, "") || category == null){
+      return ResponseEntity.ok(new ApiResponse(false, "hình ảnh hoặc category không được để trống"));
+    }
+
     WebImage wI = webImageService.addImage(new WebImage(category));
     if (!image.isEmpty()) {
       String fileName = StringUtils.cleanPath(
