@@ -255,7 +255,7 @@ public class AddressService {
 
   public Address getById(Integer id) throws AddressNotExistException {
     return addressRepository.findById(id)
-        .orElseThrow(() -> new AddressNotExistException("address not exist"));
+        .orElseThrow(() -> new AddressNotExistException("vui lòng nhập đúng địa chỉ"));
   }
 
   public void delete(Integer id) {
@@ -264,6 +264,7 @@ public class AddressService {
 
 
   public List<Address> getAll() {
-    return (List<Address>) addressRepository.findAll();
+    List<Address> list =  (List<Address>) addressRepository.findAll();
+    return list.stream().filter(address -> address.getAddressPoints().size()> 1).collect(Collectors.toList());
   }
 }

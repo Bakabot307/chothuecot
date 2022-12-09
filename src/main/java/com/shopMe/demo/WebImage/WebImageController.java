@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,8 +30,8 @@ public class WebImageController {
   public ResponseEntity<ApiResponse> addImage(@RequestParam String category,
       MultipartFile image) throws IOException {
     if(Objects.isNull(image) || Objects.equals(category, "") || category == null){
-      return ResponseEntity.ok(new ApiResponse(false, "hình ảnh hoặc category không được để trống"));
-    }
+      return new ResponseEntity<>(new ApiResponse(false, "Hình ảnh và category không được để trống"),
+          HttpStatus.BAD_REQUEST);    }
 
     WebImage wI = webImageService.addImage(new WebImage(category));
     if (!image.isEmpty()) {

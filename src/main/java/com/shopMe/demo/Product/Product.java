@@ -32,6 +32,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -41,11 +43,14 @@ public class Product {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-
+  @NotBlank(message = "Tên sản phẩm không được để trống")
   private String name;
 
+  @NotBlank(message = "Mô tả sản phẩm không được để trống")
   private String description;
 
+  @NotNull(message = "Giá sản phẩm không được để trống")
+  @Column(name = "price")
   private float price;
 
   @Transient

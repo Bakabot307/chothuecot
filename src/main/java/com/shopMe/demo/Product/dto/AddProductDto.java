@@ -1,11 +1,19 @@
 package com.shopMe.demo.Product.dto;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class AddProductDto {
 
+  @NotBlank(message = "Tên sản phẩm không được để trống")
   private String name;
 
+  @NotBlank(message = "Mô tả sản phẩm không được để trống")
   private String description;
 
+  @NotNull(message = "Giá sản phẩm không được để trống")
+  @Column(name = "price")
   private float price;
 
   private Integer addressId;

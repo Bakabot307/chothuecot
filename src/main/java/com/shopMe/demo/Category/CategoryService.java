@@ -40,7 +40,7 @@ public class CategoryService {
 
   public Category getById(Integer id) throws CategoryNotFoundException {
     return categoryRepository.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException("category not exist"));
+        .orElseThrow(() -> new CategoryNotFoundException("Vui lòng nhập đúng loại trụ"));
   }
 
   public void delete(Integer id) {
