@@ -3,6 +3,7 @@ package com.shopMe.demo.bank;
 import com.shopMe.demo.common.ApiResponse;
 import com.shopMe.demo.exceptions.BankException;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class BankController {
 
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addBank(
-      @RequestBody Bank bank) throws BankException {
+      @RequestBody @Valid Bank bank) throws BankException {
 
     bankService.addBank(bank);
     return new ResponseEntity<>(
@@ -41,7 +42,7 @@ public class BankController {
 
   @PostMapping("/edit/{id}")
   public ResponseEntity<ApiResponse> editBank(
-      @RequestBody Bank bank) throws BankException {
+      @RequestBody @Valid Bank bank) throws BankException {
 
     bankService.editBank(bank);
     return new ResponseEntity<>(

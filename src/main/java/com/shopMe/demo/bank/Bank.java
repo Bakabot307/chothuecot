@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "bank")
@@ -16,12 +17,16 @@ public class Bank {
   @Column
   private Integer id;
 
+  @NotBlank(message = "Tên ngân hàng không được để trống")
   private String bankName;
 
+  @NotBlank(message = "Code của ngân hàng không được để trống")
   private String bankCode;
 
+  @NotBlank(message = "Số tài khoản không được để trống")
   private String bankAccountNumber;
 
+  @NotBlank(message = "Tên chủ tài khoản không được để trống")
   private String bankAccountName;
 
   public Integer getId() {
