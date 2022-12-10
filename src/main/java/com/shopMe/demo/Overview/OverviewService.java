@@ -271,7 +271,8 @@ public class OverviewService {
     List<OrderDetail> listDetail = orderDetailRepository.findAll();
     return listDetail.stream()
         .filter(orderDetail -> orderDetail.getExpiredDate() != null
-            && orderDetail.getStartDate() != null || orderDetail.getOrders().getConfirmedTime() != null)
+            && orderDetail.getStartDate() != null)
+        .filter(orderDetail -> orderDetail.getOrders().getConfirmedTime() != null)
         .limit(number)
         .sorted(Comparator.comparing(OrderDetail::getStartDate).reversed())
         .collect(Collectors.groupingBy(
