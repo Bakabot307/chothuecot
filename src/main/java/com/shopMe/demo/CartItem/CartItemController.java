@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -125,9 +126,9 @@ public class CartItemController {
 
   @RolesAllowed("ROLE_USER")
   @GetMapping("/")
-  public ResponseEntity<Map<Set<AddressPoint>,List<CartItem>>> getCart() {
+  public ResponseEntity<TreeMap<String,List<CartItem>>> getCart() {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Map<Set<AddressPoint>,List<CartItem>> list = cartItemService.getCartCombo(user);
+    TreeMap<String,List<CartItem>> list = cartItemService.getCartCombo(user);
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 }

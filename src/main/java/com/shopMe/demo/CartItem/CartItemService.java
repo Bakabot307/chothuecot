@@ -10,9 +10,11 @@ import com.shopMe.demo.exceptions.ProductNotExistException;
 import com.shopMe.demo.exceptions.ShoppingCartException;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserService;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +82,15 @@ public class CartItemService {
     return list;
   }
 
-  public  Map<Set<AddressPoint>,List<CartItem>> getCartCombo(User user) {
+  public TreeMap<String,List<CartItem>> getCartCombo(User user) {
     List<CartItem> list = cartItemRepository.findByUser(user);
-    Map<Set<AddressPoint>,List<CartItem>> map = list.stream()
-        .collect(Collectors.groupingBy(cartItem -> cartItem.getProduct().getPoints()));
+    Comparator<String> c = Comparator.comparingInt(String::length);
+    TreeMap<String,List<CartItem>> map = list.stream()
+        .collect(Collectors.groupingBy(
+            cartItem -> cartItem.getProduct().getPoints().toString(),
+            () -> new TreeMap<>(c),
+            Collectors.toList()
+            ));
     return map;
   }
 

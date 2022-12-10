@@ -127,8 +127,8 @@ public class Product {
     int min =number.intValue();
     int max =min + 1;
       list = list.stream().filter(point -> point.getNumber() == min || point.getNumber() == max)
-          .collect(
-              Collectors.toSet());
+          .sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
+              Collectors.toCollection(LinkedHashSet::new));
       return list;
     } else {
       return null;
