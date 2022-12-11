@@ -82,7 +82,7 @@ public class UpdateStatus {
   }
 
 
-  public void SendEmailToUserThatHasProductInWishlist() throws UserNotFoundException {
+  public void SendEmailToUserThatHasProductInWishlist()  {
     List<WishList> wishListList = wishListService.getallWishList();
     Map<User, List<WishList>> result =
         wishListList.stream()
@@ -105,9 +105,8 @@ public class UpdateStatus {
     EmailSettingBag emailSetting = settingService.getEmailSettings();
     JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
 
-    String subject = "Trụ sắp hết hạn cho thuê";
-    String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">"
-        + "Một số trụ từ đơn hàng" + "</span> sắp hết hạn cho thuê!</h1>\n" +
+    String subject = "Một số trụ của bạn sắp hết hạn cho thuê";
+    String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">"+
         "<h2 style=\"color: #2e6c80;\">Thông tin trụ:</h2>";
     StringBuilder content2 = new StringBuilder();
     for (OrderDetail o : orderDetailList) {
@@ -167,8 +166,7 @@ public class UpdateStatus {
     JavaMailSenderImpl mailSender = Utility.prepareMailSender(emailSetting);
 
     String subject = "Trụ mà bạn đã theo dõi có thể thuê";
-    String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">"
-        + "Một số trụ từ đơn hàng" + "</span> sắp hết hạn cho thuê!</h1>\n" +
+    String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">" +
         "<h2 style=\"color: #2e6c80;\">Thông tin trụ:</h2>";
     StringBuilder content2 = new StringBuilder();
 //    for (WishList o : wishListList) {

@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -19,9 +20,8 @@ public class WebImage {
   @Column
   private Integer id;
 
-  @NotNull(message = "Hình ảnh không được để trống")
   private String image;
-  @NotNull(message = "Category không được để trống")
+  @NotBlank(message = "Category không được để trống")
   private String category;
 
   @Column(name = "active")
