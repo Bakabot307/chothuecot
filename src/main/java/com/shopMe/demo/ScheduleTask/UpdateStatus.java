@@ -140,8 +140,7 @@ public class UpdateStatus {
         "</tbody>\n" +
         "</table>" +
         "<p><strong>&nbsp;</strong></p>\n" +
-        "<p><strong>SỐ LƯỢNG: " + orderDetailList.size() +
-        "<p>Click <a style=\"background-color: #2b2301; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;\">Here</a> để kiểm tra đơn hàng nếu khách hàng muốn gia hạn cho thuê!</p>\n"
+        "<p><strong>SỐ LƯỢNG: " + orderDetailList.size()
         +
         "<p><strong>Thanks!</strong></p>\n" +
         "<p><strong>&nbsp;</strong></p>";
@@ -169,10 +168,34 @@ public class UpdateStatus {
     String content1 = "<h1 style=\"color: #5e9ca0;\">Order <span style=\"color: #2b2301;\">" +
         "<h2 style=\"color: #2e6c80;\">Thông tin trụ:</h2>";
     StringBuilder content2 = new StringBuilder();
-//    for (WishList o : wishListList) {
+    for (WishList o : wishListList) {
+      content2.append("<tr>\n")
+          .append("<td style=\"text-align:center;border:1px solid black;padding: 10px;\">")
+          .append(o.getProduct().getName()).append("</td>\n")
+          .append("<td style=\"text-align:center;border:1px solid black;padding: 10px;\">")
+          .append(o.getProduct().getPrice())
+          .append("</td>\n")
+          .append("</tr>");
+    }
+    String content3 = "<table style=\"border:1px solid black;border-collapse:collapse;\">\n" +
+        "<thead>\n" +
+        "<tr>\n" +
+        "<td style=\"border:1px solid black;padding: 10px;font-weight: bold;\">Mã số trụ</td>\n" +
+        "<td style=\"border:1px solid black;padding: 10px;font-weight: bold;\">Giá</td>\n" +
+        "</tr>\n" +
+        "</thead>\n" +
+        "<tbody>\n" +
+        content2
+        +
+        "</tbody>\n" +
+        "</table>" +
+        "<p><strong>&nbsp;</strong></p>\n" +
+        "<p><strong>SỐ LƯỢNG: " + wishListList.size()
+        +
+        "<p><strong>Thanks!</strong></p>\n" +
+        "<p><strong>&nbsp;</strong></p>";
 
-
-    String content = content1;
+    String content = content1 + content3;
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message);
     try {
