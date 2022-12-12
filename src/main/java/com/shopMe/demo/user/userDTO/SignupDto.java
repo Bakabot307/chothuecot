@@ -8,27 +8,28 @@ import javax.validation.constraints.NotBlank;
 
 public class SignupDto {
     @Column(name = "first_name",nullable = false,length = 255)
-    @NotBlank(message = "First name cannot be null")
-    @Length(min = 3,max = 255,message = "First name must have 3-255 characters")
+    @NotBlank(message = "Tên không được để trống")
+    @Length(min = 3,max = 255,message = "Tên phải từ 3 đến 255 ký tự")
     private String firstName;
 
     @Column(name = "last_name",nullable = false,length = 255)
-    @NotBlank(message = "Last name cannot be null")
-    @Length(min = 3,max = 255,message = "Last name must have 3-255 characters")
+    @NotBlank(message = "Họ không được để trống")
+    @Length(min = 3,max = 255,message = "Họ phải từ 3 đến 255 ký tự")
     private String lastName;
 
     @Column(name = "email",length = 255,unique = true,nullable = false)
-    @Email(message = "Please provide a valid email address")
+    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email không thể để trống")
     private String email;
 
     @Column(name = "password",length = 255, nullable = false)
-    @NotBlank(message = "Password cannot be null")
-    @Length(min = 8,message = "Password must have at least 8 characters")
-    @Length(max = 255,message = "Last name must have below 255 characters")
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Length(min = 8,message = "Mật khẩu phải có ít nhất 8 ký tự")
+    @Length(max = 255,message = "Mật khẩu không được quá 255 ký tự")
     private String password;
 
     @Column(name = "phoneNumber",length = 20,unique = true,nullable = true)
-    @NotBlank(message = "Phone number cannot be null")
+    @NotBlank(message = "Số điện thoại không được để trống")
     private String phoneNumber;
     public SignupDto() {
     }
