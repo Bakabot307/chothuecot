@@ -3,6 +3,7 @@ package com.shopMe.demo.WebImage;
 import com.shopMe.demo.exceptions.WebImageException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,12 +46,12 @@ public class WebImageService {
         list = list.stream().limit(about).toList();
         break;
       case "logo":
-        list = list.stream().limit(logo).toList();
+        Random rand = new Random();
+        list = rand.ints(0, list.size()).distinct().limit(logo).mapToObj(list::get).toList();
         break;
       default:
         break;
     }
-
     return list;
   }
 

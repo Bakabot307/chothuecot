@@ -164,58 +164,6 @@ public class OverviewService {
   }
 
 
-  public float getEarningLastWeek() {
-    Date today = new Date();
-    Calendar calendarTo = Calendar.getInstance();
-    calendarTo.setTime(today);
-    calendarTo.set(Calendar.HOUR_OF_DAY, 23);
-    calendarTo.set(Calendar.MINUTE, 59);
-    calendarTo.set(Calendar.SECOND, 59);
-    calendarTo.set(Calendar.MILLISECOND, 999);
-
-    Calendar calendarFrom = Calendar.getInstance();
-    today = Helper.MinusDay(today, 7);
-    calendarFrom.setTime(today);
-    calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
-    calendarFrom.set(Calendar.MINUTE, 0);
-    calendarFrom.set(Calendar.SECOND, 0);
-    calendarFrom.set(Calendar.MILLISECOND, 0);
-
-    Date to = calendarTo.getTime();
-    Date from = calendarFrom.getTime();
-    System.out.println(to);
-    System.out.println(from);
-
-    return orderRepository.findAll().stream()
-        .filter(o -> o.getConfirmedTime() != null)
-        .filter(o -> o.getConfirmedTime().before(to) && o.getConfirmedTime().after(from))
-        .map(Order::getTotal)
-        .reduce((float) 0, Float::sum);
-
-  }
-
-  public Long getEarning(Date from, Date to) {
-    Calendar calendarTo = Calendar.getInstance();
-    calendarTo.setTime(to);
-    calendarTo.set(Calendar.HOUR_OF_DAY, 23);
-    calendarTo.set(Calendar.MINUTE, 59);
-    calendarTo.set(Calendar.SECOND, 59);
-    calendarTo.set(Calendar.MILLISECOND, 999);
-
-    Calendar calendarFrom = Calendar.getInstance();
-    calendarFrom.setTime(from);
-    calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
-    calendarFrom.set(Calendar.MINUTE, 0);
-    calendarFrom.set(Calendar.SECOND, 0);
-    calendarFrom.set(Calendar.MILLISECOND, 0);
-
-    to = calendarTo.getTime();
-    from = calendarFrom.getTime();
-    System.out.println(to);
-    System.out.println(from);
-    return 1L;
-  }
-
   public OverviewProductDto getProductHired(String sort, Date date1, Date date2, Integer page,
       Integer dataPerPage, String keyword) {
     List<OrderDetail> listDetail;
