@@ -58,7 +58,7 @@ public class WebImageController {
       MultipartFile image) throws IOException, WebImageException {
     WebImage wI = webImageService.getById(id);
 
-    if (!image.isEmpty()) {
+    if (image!=null && !image.isEmpty() ) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(image.getOriginalFilename()));
       wI.setImage(fileName);

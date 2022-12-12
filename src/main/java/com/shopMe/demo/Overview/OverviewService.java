@@ -157,7 +157,6 @@ public class OverviewService {
 
   public float getTotalEarning() {
     return orderRepository.findAll().stream()
-
         .filter(o -> o.getConfirmedTime() != null)
         .filter(o -> o.getStatus() == OrderStatus.PAID || o.getStatus() == OrderStatus.DONE)
         .map(Order::getTotal)

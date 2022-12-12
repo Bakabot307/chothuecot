@@ -89,7 +89,11 @@ public class UserController {
   ) throws CustomException, MessagingException, UnsupportedEncodingException {
 
     if (Objects.nonNull(userService.findByEmail(signupDto.getEmail()))) {
-      throw new CustomException("User already exists");
+      throw new CustomException("Email đã tồn tại");
+    }
+
+    if (Objects.nonNull(userService.findByPhoneNumber(signupDto.getPhoneNumber()))) {
+      throw new CustomException("Số điện thoại đã tồn tại");
     }
     String encryptedPassword;
     encryptedPassword = passwordEncoder.encode(signupDto.getPassword());
