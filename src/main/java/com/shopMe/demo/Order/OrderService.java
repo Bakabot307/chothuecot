@@ -392,7 +392,7 @@ public class OrderService {
       Notification notification = new Notification(
           "Đơn hàng số " + orderSaved.getId() + " đã được xác nhận",
           new Date(), MessageType.ORDER,
-          false, orderSaved.getId(), null);
+          false, orderSaved.getId(), user.getId());
       Notification notification2 = notificationService.addNotification2(notification);
       simpMessagingTemplate.convertAndSend("/notification/public", notification2);
     } else {

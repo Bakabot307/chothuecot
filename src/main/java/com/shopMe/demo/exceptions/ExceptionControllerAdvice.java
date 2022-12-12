@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
-
-
   @ExceptionHandler(value = ProductNotExistException.class)
   public final ResponseEntity<String> handleUpdateFailException(
       ProductNotExistException exception) {
@@ -27,8 +25,6 @@ public class ExceptionControllerAdvice {
       OrderCantExtendException exception) {
     return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
   }
-
-
 
   @ExceptionHandler(value = IllegalStateException.class)
   public final ResponseEntity<String> IllegalStateException(
