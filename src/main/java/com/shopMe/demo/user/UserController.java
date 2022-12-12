@@ -351,7 +351,7 @@ public class UserController {
     }
     user.setRoles(new HashSet<>());
     user.addRole(role);
-    userService.save(user);
+    userService.updateUser(user);
 
     return new ResponseEntity<>(
         new ApiResponse(true, "updated " + roleName + " for user " + userId), HttpStatus.OK);
