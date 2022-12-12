@@ -25,7 +25,7 @@ public class WebImage {
   private String category;
 
   @Column(name = "active")
-  private boolean active;
+  private boolean active=false;
 
   public WebImage() {
   }

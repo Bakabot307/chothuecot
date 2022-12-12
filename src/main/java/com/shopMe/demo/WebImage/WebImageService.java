@@ -18,7 +18,7 @@ public class WebImageService {
   private WebImageRepository repo;
 
   public WebImage addImage(WebImage image) {
-    image.setActive(false);
+
     return repo.save(image);
   }
 
