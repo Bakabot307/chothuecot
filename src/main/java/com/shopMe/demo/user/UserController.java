@@ -240,12 +240,26 @@ public class UserController {
   @RolesAllowed("ROLE_USER")
 
   public ResponseEntity<ApiResponse> editUser(
-      @RequestBody @Valid UpdateUserDto updateUserDto
-  ) throws UserNotFoundException {
+      @RequestBody @Valid UpdateUserDto updateUserDto,
+      HttpServletRequest request
+  ) throws UserNotFoundException, MessagingException, UnsupportedEncodingException, CustomException {
 
     User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User updatingUser = userService.getById(user1.getId());
+
+    if (Objects.nonNull(userService.findByEmail(updateUserDto.getEmail())) && !updatingUser.getEmail().equals(updateUserDto.getEmail())) {
+      throw new CustomException("Email đã tồn tại");
+    }
     updatingUser.Update(updateUserDto);
+
+    if(!Objects.equals(updatingUser.getEmail(), updateUserDto.getEmail())) {
+      String randomCode = RandomString.make(64);
+      updatingUser.setEmailVerifyCode(randomCode);
+      updatingUser.setEmailVerified(false);
+      userService.sendEmail(updatingUser, request);
+
+    }
+
 
     userService.updateUser(updatingUser);
     return new ResponseEntity<>(new ApiResponse(true, "Updated user successfully!"), HttpStatus.OK);
@@ -264,9 +278,7 @@ public class UserController {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       updatingUser.setAvatar(fileName);
-
       String uploadDir = "user-photos/" + updatingUser.getId();
-
       AmazonS3Util.removeFolder(uploadDir);
       AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
     } else {
