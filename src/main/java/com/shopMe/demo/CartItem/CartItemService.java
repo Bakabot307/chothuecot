@@ -42,11 +42,10 @@ public class CartItemService {
   public void addCart(CartItem cart) throws ShoppingCartException {
     CartItem cartDB = cartItemRepository.findByUserAndProduct(cart.getUser(), cart.getProduct());
     if (cartDB != null) {
-      throw new ShoppingCartException("product is already in cart");
+      throw new ShoppingCartException("Trụ đã có trong danh sách thanh toán");
     } else {
       cartItemRepository.save(cart);
     }
-
   }
 
 

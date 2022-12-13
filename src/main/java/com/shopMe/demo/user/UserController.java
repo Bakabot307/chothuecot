@@ -332,7 +332,6 @@ public class UserController {
   public ResponseEntity<ApiResponse> updateUser(@RequestBody UpdateUser updateUser)
       throws UserNotFoundException {
     User updatingUser = userService.getById(updateUser.getId());
-
     updatingUser.setFirstName(updateUser.getFirstName());
     updatingUser.setLastName(updateUser.getLastName());
     updatingUser.setEmail(updateUser.getEmail());
@@ -351,7 +350,7 @@ public class UserController {
           HttpStatus.BAD_REQUEST);
     }
     if (user.getRoles().contains(role)) {
-      return new ResponseEntity<>("user already has this role", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>("Vai trò này đã có", HttpStatus.BAD_REQUEST);
     }
     user.setRoles(new HashSet<>());
     user.addRole(role);
@@ -376,13 +375,11 @@ public class UserController {
   @GetMapping("/admin/user/hiring")
   public ResponseEntity<List<UserData>> getUserHiring() {
     List<User> list = userService.getUserHiring();
-
     List<UserData> userList = new ArrayList<>();
     for (User user : list) {
       UserData userData = new UserData(user);
       userList.add(userData);
     }
-
     return ResponseEntity.ok().body(userList);
   }
 }

@@ -2,6 +2,7 @@ package com.shopMe.demo.Websocket;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,16 @@ public class NotificationService {
   private NotificationRepository notificationRepository;
 
   public List<Notification> getNotifications(Integer userId) {
-    List<Notification> notifications = notificationRepository.findAll();
-    notifications.sort(
-        Comparator.comparing(Notification::getDate)
-            .reversed());
+
+
     if (userId == null) {
-      return notificationRepository.findByUserId(null);
+      return notificationRepository.findByUserId(null).stream()
+          .sorted(Comparator.comparing(Notification::getDate).reversed())
+          .collect(Collectors.toList());
     } else {
-      return notificationRepository.findByUserId(userId);
+      return notificationRepository.findByUserId(userId).stream()
+          .sorted(Comparator.comparing(Notification::getDate).reversed())
+          .collect(Collectors.toList());
     }
   }
 

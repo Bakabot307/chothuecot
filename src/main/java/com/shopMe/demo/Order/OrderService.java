@@ -106,7 +106,7 @@ public class OrderService {
     order.getOrderTracks().add(track);
     order.setCancelTime(Helper.PlusHour(today, 1));
     Order orderSaved = orderRepository.save(order);
-    Notification notification = new Notification("Đơn hàng " + orderSaved.getId() + " mới được đặt",
+    Notification notification = new Notification("Đơn hàng mã số " + orderSaved.getOrderCode() + " mới được đặt",
         new Date(), MessageType.ORDER,
         false, orderSaved.getId(), null);
     Notification notification2 = notificationService.addNotification2(notification);
@@ -170,7 +170,7 @@ public class OrderService {
     if (status == null && keyword == null ) {
       orders = orderRepository.findAll().stream()
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+          .sorted(Comparator.comparing(Order::getId, Comparator.nullsLast(
               Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
 
@@ -178,7 +178,7 @@ public class OrderService {
       orders = orderRepository.findByStatusAndKeyword(keyword).stream()
           .filter(o -> o.getStatus() == status)
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+          .sorted(Comparator.comparing(Order::getId, Comparator.nullsLast(
               Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
     } else if (status != null) {
@@ -186,14 +186,14 @@ public class OrderService {
           .filter(Objects::nonNull)
           .filter(o -> o.getStatus() == status)
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+          .sorted(Comparator.comparing(Order::getId, Comparator.nullsLast(
               Comparator.naturalOrder())).reversed())
           .collect(Collectors.toList());
     } else {
       orders = orderRepository.findByStatusAndKeyword(keyword)
           .stream()
           .filter(order -> order.getOrderTime().after(fromDate) && order.getOrderTime().before(toDate))
-          .sorted(Comparator.comparing(Order::getConfirmedTime, Comparator.nullsLast(
+          .sorted(Comparator.comparing(Order::getId, Comparator.nullsLast(
               Comparator.naturalOrder())).reversed()).toList();
     }
     for (Order order : orders) {
@@ -255,7 +255,7 @@ public class OrderService {
     order.getOrderTracks().add(track);
 
     Notification notification = new Notification(
-        "Đơn hàng số " + order.getId() + " của bạn đã được xác nhận",
+        "Đơn hàng mã số " + order.getOrderCode() + " của bạn đã được xác nhận",
         new Date(), MessageType.ORDER,
         false, order.getId(), order.getUser().getId());
     Notification notification2 = notificationService.addNotification2(notification);
@@ -286,7 +286,7 @@ public class OrderService {
     Order orderSaved = orderRepository.save(order);
 
     Notification notification = new Notification(
-        "Đơn hàng số " + orderSaved.getId() + " của bạn đã bị hủy",
+        "Đơn hàng mã số " + orderSaved.getOrderCode() + " của bạn đã bị hủy",
         new Date(), MessageType.ORDER,
         false, order.getId(), order.getUser().getId());
     Notification notification2 = notificationService.addNotification2(notification);
@@ -351,7 +351,7 @@ public class OrderService {
     Order orderSaved = orderRepository.save(newOrder);
 
     Notification notification = new Notification(
-        "Đơn hàng gia hạn số " + orderSaved.getId() + " vừa được đặt",
+        "Đơn hàng gia hạn mã số " + orderSaved.getOrderCode() + " vừa được đặt",
         new Date(), MessageType.ORDER,
         false, orderSaved.getId(), null);
     Notification notification2 = notificationService.addNotification2(notification);
@@ -390,9 +390,9 @@ public class OrderService {
       order.getOrderTracks().add(track);
       Order orderSaved = orderRepository.save(order);
       Notification notification = new Notification(
-          "Đơn hàng số " + orderSaved.getId() + " đã được xác nhận",
+          "Đơn hàng mã số " + orderSaved.getOrderCode() + " đã được xác nhận",
           new Date(), MessageType.ORDER,
-          false, orderSaved.getId(), user.getId());
+          false, orderSaved.getId(), null);
       Notification notification2 = notificationService.addNotification2(notification);
       simpMessagingTemplate.convertAndSend("/notification/public", notification2);
     } else {
@@ -412,9 +412,9 @@ public class OrderService {
     order.getOrderTracks().add(track);
     Order orderSaved = orderRepository.save(order);
     Notification notification = new Notification(
-        "Đơn hàng số " + orderSaved.getId() + " đã bị hủy",
+        "Đơn hàng mã số " + orderSaved.getId() + " đã bị hủy",
         new Date(), MessageType.ORDER,
-        false, orderSaved.getId(), user.getId());
+        false, orderSaved.getId(), null);
     Notification notification2 = notificationService.addNotification2(notification);
     simpMessagingTemplate.convertAndSend("/notification/public", notification2);
   }

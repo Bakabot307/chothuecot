@@ -57,7 +57,7 @@ public class CartItemController {
 
     if (product.getStatus() == ProductStatus.HIRING) {
       return new ResponseEntity<>(
-          new ApiResponse(false, "product has been ordered by someone else"),
+          new ApiResponse(false, "trụ đã được thuê"),
           HttpStatus.BAD_REQUEST);
     }
 
@@ -65,7 +65,7 @@ public class CartItemController {
     cart.setProduct(product);
     cart.setMonth(cartItemDto.getMonth());
     cartItemService.addCart(cart);
-    return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ApiResponse(true, "thêm thành công"), HttpStatus.CREATED);
   }
 
   @PostMapping("/addtocart_combo")
@@ -109,7 +109,7 @@ public class CartItemController {
 
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     cartItemService.updateDay(productId, month, user);
-    return new ResponseEntity<>(new ApiResponse(true, "updated successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse(true, "Cập nhật thành công"), HttpStatus.OK);
 
   }
 

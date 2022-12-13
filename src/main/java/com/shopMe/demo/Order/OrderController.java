@@ -223,7 +223,7 @@ public class OrderController {
   }
 
   @GetMapping("/admin/orders/")
-  public ResponseEntity<List<OrderAdminDto>> getOrderByStatus(
+  public ResponseEntity<?> getOrderByStatus(
       @RequestParam(required = false) String status,
       @RequestParam(value = "keyword", required = false) String keyword,
       @RequestParam String fromDate,
@@ -232,7 +232,11 @@ public class OrderController {
     if (status != null) {
       eStatus = OrderStatus.valueOf(status);
     }
+
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    if(format.parse(fromDate).after(format.parse(toDate))){
+      return new ResponseEntity<>("Ngày bắt đầu phải nhỏ hơn", HttpStatus.BAD_REQUEST);
+    }
     List<OrderAdminDto> list = orderService.findByStatus(eStatus, keyword,format.parse(fromDate),format.parse(toDate));
     return ResponseEntity.ok().body(list);
   }
