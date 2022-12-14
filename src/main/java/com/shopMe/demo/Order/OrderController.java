@@ -396,6 +396,27 @@ public class OrderController {
     }, 60*61, TimeUnit.SECONDS);
   }
 
+//  @Async
+//  @GetMapping(value = "/start_cool_down")
+//  public void executeTask2(@RequestParam Integer orderId) {
+//    System.out.println("start");
+//    ScheduledExecutorService scheduler =
+//        Executors.newScheduledThreadPool(1);
+//    ///cancel order
+//    final Runnable cancelOrder = () -> {
+//      Order order = orderService.getByOrderId(orderId);
+//      if (order.getCancelTime().before(new Date())) {
+//        orderService.cancelled(order);
+//      }
+//    };
+//    final ScheduledFuture<?> cancelHandler =
+//        scheduler.scheduleAtFixedRate(cancelOrder, 10, 10, TimeUnit.SECONDS);
+//    scheduler.schedule(() -> {
+//      cancelHandler.cancel(true);
+//      System.out.println("end");
+//    }, 11, TimeUnit.SECONDS);
+//  }
+
   @PostMapping("/extend_order_payment_time/{id}")
   public void extendOrderPayTime(@RequestParam(required = false) String day,
       @PathVariable Integer id)

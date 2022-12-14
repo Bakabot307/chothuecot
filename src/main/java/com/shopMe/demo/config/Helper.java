@@ -34,10 +34,17 @@ public class Helper {
     return Date.from(instant);
   }
 
-  public static Date PlusHour(Date date, Integer day) {
+  public static Date PlusHour(Date date, Integer hour) {
     Instant instant = Instant.ofEpochMilli(date.getTime());
     LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-    instant = ldt.toInstant(ZoneOffset.UTC).plusSeconds(day * 60 * 60);
+    instant = ldt.toInstant(ZoneOffset.UTC).plusSeconds(hour * 60 * 60);
+    return Date.from(instant);
+  }
+
+  public static Date PlusSeconds(Date date, Integer seconds) {
+    Instant instant = Instant.ofEpochMilli(date.getTime());
+    LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+    instant = ldt.toInstant(ZoneOffset.UTC).plusSeconds(seconds);
     return Date.from(instant);
   }
 
