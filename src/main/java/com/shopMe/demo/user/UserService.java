@@ -167,6 +167,7 @@ public class UserService {
 
   public User findByEmail(String email) {
     Optional<User> user = userRepository.findByEmail(email);
+
     return user.orElse(null);
 
   }

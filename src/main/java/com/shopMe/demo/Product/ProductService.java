@@ -184,7 +184,6 @@ public class ProductService {
       finalList = listWithNoKeyword
           .stream().filter(p -> p.getStatus().equals(status))
           .collect(Collectors.toList());
-
     }
     return new PageImpl<>(finalList, pageable, totalProduct);
   }

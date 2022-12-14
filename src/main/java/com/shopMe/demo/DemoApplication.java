@@ -6,6 +6,9 @@ import com.shopMe.demo.Role.Role;
 import com.shopMe.demo.user.User;
 import com.shopMe.demo.user.UserNotFoundException;
 import com.shopMe.demo.user.UserService;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +49,12 @@ public class DemoApplication {
   }
 
   public static void main(String[] args) {
+    //change SystemTime to UTC
+//    String instantExpected = "2014-12-22T10:15:30Z";
+//    Clock clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"));
+//    Instant instant = Instant.now(clock);
+//    System.out.println(instant.toString());
+    //main
     SpringApplication.run(DemoApplication.class, args);
   }
 
@@ -79,6 +88,7 @@ public class DemoApplication {
     update.SendEmailToUserThatHasProductInWishlist();
     update.cancelOrder();
   }
+
 
   //add schedule for wishlist
 }
