@@ -11,10 +11,10 @@
     <relativePath/>
   </parent>
   <groupId>com.shopMe</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>quangcao</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>demo</name>
-  <description>Demo project for Spring Boot</description>
+  <name>quangCao</name>
+  <description>Quản lý trụ quảng cáo</description>
   <properties>
     <java.version>17</java.version>
   </properties>
