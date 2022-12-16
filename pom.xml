@@ -11,10 +11,10 @@
     <relativePath/>
   </parent>
   <groupId>com.shopMe</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>quangcao</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>demo</name>
-  <description>Demo project for Spring Boot</description>
+  <name>quangCao</name>
+  <description>Quản lý trụ quảng cáo</description>
   <properties>
     <java.version>17</java.version>
   </properties>
@@ -30,6 +30,8 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
 
 
     <dependency>
@@ -140,13 +142,10 @@
 
       </plugin>
       <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>10</source>
-                    <target>10</target>
-                </configuration>
-            </plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
     </plugins>
   </build>
 </project>
