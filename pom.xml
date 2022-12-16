@@ -31,9 +31,6 @@
   </dependencyManagement>
   <dependencies>
 
-    <!-- https://mvnrepository.com/artifact/junit/junit -->
-
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
