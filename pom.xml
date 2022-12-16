@@ -100,7 +100,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
-
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
@@ -115,21 +114,17 @@
       <artifactId>spring-boot-starter-websocket</artifactId>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>1.12.327</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-secretsmanager -->
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-secretsmanager</artifactId>
       <version>1.12.327</version>
     </dependency>
-
-
   </dependencies>
 
   <build>
