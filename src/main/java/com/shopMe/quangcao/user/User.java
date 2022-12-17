@@ -62,9 +62,9 @@ public class User implements UserDetails {
 
   @JsonIgnore
   @Column(name = "password", length = 25, nullable = false)
-  @NotBlank(message = "Password cannot be null")
-  @Length(min = 8, message = "Password must have at least 8 characters")
-  @Length(max = 255, message = "Last name must have below 255 characters")
+  @NotBlank(message = "Mật khẩu không được để trống")
+  @Length(min = 8,message = "Mật khẩu phải có ít nhất 8 ký tự")
+  @Length(max = 255,message = "Mật khẩu không được quá 255 ký tự")
   private String password;
 
   @Column(name = "created_date")

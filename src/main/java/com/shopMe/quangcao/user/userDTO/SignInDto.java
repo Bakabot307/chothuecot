@@ -7,12 +7,12 @@ import javax.validation.constraints.NotBlank;
 
 public class SignInDto {
     @Column(name = "phoneNumber",length = 20,unique = true,nullable = true)
-    @NotBlank(message = "Phone number cannot be null")
+    @NotBlank(message = "Số điện thoại không được để trống")
     private String phoneNumber;
     @Column(name = "password",length = 255, nullable = false)
-    @NotBlank(message = "Password cannot be null")
-    @Length(min = 8,message = "Password must have at least 8 characters")
-    @Length(max = 255,message = "Last name must have below 255 characters")
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Length(min = 8,message = "Mật khẩu phải có ít nhất 8 ký tự")
+    @Length(max = 255,message = "Mật khẩu không được quá 255 ký tự")
     private String password;
 
 
