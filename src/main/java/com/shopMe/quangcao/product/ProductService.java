@@ -100,7 +100,6 @@ public class ProductService {
             .sorted((Comparator.comparing(p ->
                 p.getAddress().getStreetOrCity(sortField))))
             .collect(Collectors.toList());
-        System.out.println("after stream" + finalList);
         if (sort.equals("desc")) {
           finalList = Lists.reverse(listWithKeyword.getContent());
         }
@@ -176,7 +175,6 @@ public class ProductService {
         if (sort.equals("desc")) {
           finalList = Lists.reverse(finalList);
         }
-        System.out.println("final list" + finalList.size());
         totalProduct = finalList.size();
         return new PageImpl<>(finalList, pageable, totalProduct);
       }

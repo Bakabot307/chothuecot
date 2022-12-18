@@ -120,8 +120,6 @@ public class UserService {
 
     mailSender.send(message);
 
-    System.out.println("to Address: " + toAddress);
-    System.out.println("Verify URL: " + verifyURL);
   }
 
 
@@ -183,7 +181,6 @@ public class UserService {
     if (!Objects.nonNull(user)) {
       throw new AuthenticationFailException(MessageStrings.USER_NOT_FOUND);
     }
-    System.out.println(passwordEncoder.matches(password, user.getPassword()));
     if (!passwordEncoder.matches(password, user.getPassword())) {
       throw new AuthenticationFailException(MessageStrings.USER_PASSWORD_WRONG);
     }

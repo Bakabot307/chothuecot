@@ -173,8 +173,6 @@ public class UserController {
     try {
       String token = userService.updateResetPasswordToken(email);
       String link = SITE_URL + "/auth/reset_password?token=" + token;
-      System.out.println("email " + email);
-      System.out.println("link " + link);
       try {
         sendEmail(link, email);
       } catch (MessagingException | UnsupportedEncodingException e) {

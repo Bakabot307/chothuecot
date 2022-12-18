@@ -27,12 +27,10 @@ public class NotificationService {
   }
 
   public void addNotification(Notification notification) {
-    System.out.println("add notification: " + notification);
     notificationRepository.save(notification);
   }
 
   public Notification addNotification2(Notification notification) {
-    System.out.println("add notification: " + notification);
     return notificationRepository.save(notification);
   }
 

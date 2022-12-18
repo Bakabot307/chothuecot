@@ -143,8 +143,6 @@ public class OverviewService {
 
     Date to = calendarTo.getTime();
     Date from = calendarFrom.getTime();
-    System.out.println(to);
-    System.out.println(from);
 
     return orderRepository.findAll().stream()
         .filter(o -> o.getConfirmedTime() != null)

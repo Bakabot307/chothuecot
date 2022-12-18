@@ -66,7 +66,6 @@ public class QuangCaoApplication {
     if (adminRole == null) {
       adminRole = roleService.save(new Role("ROLE_ADMIN"));
     }
-    System.out.println(adminEmail);
     User user = userService.findByPhoneNumber(adminPhone);
     if (user == null) {
       User admin = new User("admin", "quanlitru", adminEmail, adminPhone, null,
@@ -80,7 +79,6 @@ public class QuangCaoApplication {
 //every 1AM
   @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Ho_Chi_Minh")
   public void autoSendEmail() throws UserNotFoundException {
-    System.out.println("autoSendEmail");
 
     //send mail to user có product sắp hết hạn
     update.SendEmailToUserThatHasProductExpiring();

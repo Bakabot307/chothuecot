@@ -125,7 +125,6 @@ public class ProductController {
     double random = productDto.getNum1() + Math.random() * (productDto.getNum2()
         - productDto.getNum1());
 
-    System.out.println(productDto.getNum1() + productDto.getNum2());
     productDB = productDB.copyUpdate(productDto);
     productDB.setNumber(random);
     Category category = categoryService.getById(productDB.getCategory().getId());

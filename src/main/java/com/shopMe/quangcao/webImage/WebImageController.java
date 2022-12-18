@@ -38,7 +38,6 @@ public class WebImageController {
     if (!image.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(image.getOriginalFilename()));
-      System.out.println(fileName);
       wI.setImage(fileName);
       String uploadDir = "web-images/" + wI.getId();
       AmazonS3Util.removeFolder(uploadDir);

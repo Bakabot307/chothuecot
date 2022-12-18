@@ -56,7 +56,6 @@ public class NotificationController {
         new Notification("hello from server " + count, new Date(), MessageType.ORDER,
             false, null, null));
 
-    System.out.println("test: " + count);
 
   }
 
@@ -66,7 +65,6 @@ public class NotificationController {
     simpMessagingTemplate.convertAndSendToUser(message.getUserId().toString(), "/user", message);
     simpMessagingTemplate.convertAndSendToUser("15", "/user",
         new Notification("yo", new Date(), MessageType.ORDER, false, null, message.getUserId()));
-    System.out.println(message.toString());
     return message;
   }
 

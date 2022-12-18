@@ -34,8 +34,6 @@ public class AmazonS3Util {
 
     while (listIterator.hasNext()) {
       S3Object object = listIterator.next();
-      System.out.println("key: " + object.key());
-      System.out.println("owner: " + object.owner());
       listKeys.add(object.key());
     }
     return listKeys;
