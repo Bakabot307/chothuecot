@@ -38,7 +38,6 @@ public class Address {
   @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Product> products;
 
-
   @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<AddressPoint> addressPoints;
 
@@ -113,9 +112,9 @@ public class Address {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return Constants.S3_BASE_URI + "/default-images/default-user.png";
+      return "/default-images/default-user.png";
     }
-    return Constants.S3_BASE_URI + "/address-images/" + this.id + "/" + this.image;
+    return "http://localhost:8082/address-images/" + this.id + "/" + this.image;
   }
 
   public Set<AddressPoint> getAddressPoints() {

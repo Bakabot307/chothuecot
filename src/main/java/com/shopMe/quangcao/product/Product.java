@@ -34,7 +34,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
 @Entity
 @Table(name = "product")
 public class Product {
@@ -75,7 +74,6 @@ public class Product {
   @JoinColumn(name = "category_id")
   private Category category;
 
-
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<OrderDetail> orderDetails;
@@ -105,7 +103,6 @@ public class Product {
   @Transient
   private Set<AddressPoint> points;
 
-
   @JsonIgnore
   @ManyToMany(mappedBy = "wishlist")
   Set<User> usersWL;
@@ -121,10 +118,11 @@ public class Product {
 
   public Set<AddressPoint> getPoints() {
     if (address != null) {
-    Set<AddressPoint> list = address.getAddressPoints().stream().sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
-        Collectors.toCollection(LinkedHashSet::new));
-    int min =number.intValue();
-    int max =min + 1;
+      Set<AddressPoint> list = address.getAddressPoints().stream()
+          .sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
+              Collectors.toCollection(LinkedHashSet::new));
+      int min = number.intValue();
+      int max = min + 1;
       list = list.stream().filter(point -> point.getNumber() == min || point.getNumber() == max)
           .sorted(Comparator.comparingDouble(AddressPoint::getNumber)).collect(
               Collectors.toCollection(LinkedHashSet::new));
@@ -132,7 +130,6 @@ public class Product {
     } else {
       return null;
     }
-
 
   }
 
@@ -157,7 +154,6 @@ public class Product {
     this.lng = update.getLng();
     return this;
   }
-
 
   public Double getNumber() {
     return number;
@@ -286,7 +282,6 @@ public class Product {
     this.address = address;
   }
 
-
   public String getImage() {
     return image;
   }
@@ -294,7 +289,6 @@ public class Product {
   public void setImage(String image) {
     this.image = image;
   }
-
 
   public List<OrderDetail> getOrderDetails() {
     return orderDetails;
@@ -317,7 +311,6 @@ public class Product {
 
   }
 
-
   public Category getCategory() {
     return category;
   }
@@ -329,11 +322,10 @@ public class Product {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return Constants.S3_BASE_URI + "/default-images/default-user.png";
+      return "/default-images/default-user.png";
     }
-    return Constants.S3_BASE_URI + "/product-images/" + this.id + "/" + this.image;
+    return "http://localhost:8082/product-images/" + this.id + "/" + this.image;
   }
-
 
   private OrderDetail showOrderDetail() {
     return orderDetails.stream()
@@ -350,6 +342,5 @@ public class Product {
         .filter(orderDetail -> orderDetail.getExpiredDate().after(new Date()))
         .min(Comparator.comparing(OrderDetail::getExpiredDate)).orElse(null);
   }
-
 
 }

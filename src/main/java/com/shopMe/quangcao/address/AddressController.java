@@ -5,6 +5,7 @@ import com.shopMe.quangcao.address.dto.AddressDetaildto;
 import com.shopMe.quangcao.amazon.AmazonS3Util;
 import com.shopMe.quangcao.product.ProductService;
 import com.shopMe.quangcao.common.ApiResponse;
+import com.shopMe.quangcao.common.FileUploadUtil;
 import com.shopMe.quangcao.exceptions.AddressNotExistException;
 import com.shopMe.quangcao.user.User;
 import com.shopMe.quangcao.user.UserNotFoundException;
@@ -86,8 +87,8 @@ public class AddressController {
       savedAddress.setImage(fileName);
       String uploadDir = "address-images/" + savedAddress.getId();
 
-      AmazonS3Util.removeFolder(uploadDir);
-      AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+      FileUploadUtil.cleanDir(uploadDir);
+      FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     } else {
       if (savedAddress.getImage() == null) {
         savedAddress.setImage(null);
@@ -110,8 +111,8 @@ public class AddressController {
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       editAddress.setImage(fileName);
       String uploadDir = "address-images/" + editAddress.getId();
-      AmazonS3Util.removeFolder(uploadDir);
-      AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+      FileUploadUtil.cleanDir(uploadDir);
+      FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
     addressService.save(editAddress);
     return new ResponseEntity<>(new ApiResponse(true, "Cập nhật thành công"), HttpStatus.CREATED);
@@ -121,7 +122,7 @@ public class AddressController {
   public ResponseEntity<ApiResponse> delete(@RequestParam("id") Integer id)
       throws AddressNotExistException {
     String addressDir = "address-images/" + id;
-    AmazonS3Util.removeFolder(addressDir);
+    FileUploadUtil.cleanDir(addressDir);
     addressService.delete(id);
     return new ResponseEntity<>(new ApiResponse(true, "Đã xóa thành công"), HttpStatus.CREATED);
   }

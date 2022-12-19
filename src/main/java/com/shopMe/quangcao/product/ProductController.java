@@ -11,6 +11,7 @@ import com.shopMe.quangcao.product.dto.AddProductDto;
 import com.shopMe.quangcao.product.dto.CategoryDto;
 import com.shopMe.quangcao.product.dto.UpdateProductDto;
 import com.shopMe.quangcao.common.ApiResponse;
+import com.shopMe.quangcao.common.FileUploadUtil;
 import com.shopMe.quangcao.common.Helper;
 import com.shopMe.quangcao.exceptions.AddressNotExistException;
 import com.shopMe.quangcao.exceptions.CategoryNotFoundException;
@@ -101,8 +102,8 @@ public class ProductController {
 
       String uploadDir = "product-images/" + savedProduct.getId();
 
-      AmazonS3Util.removeFolder(uploadDir);
-      AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+      FileUploadUtil.cleanDir(uploadDir);
+      FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     } else {
       if (savedProduct.getImage().isEmpty()) {
         savedProduct.setImage(null);
@@ -138,8 +139,8 @@ public class ProductController {
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       productDB.setImage(fileName);
       String uploadDir = "product-images/" + productDB.getId();
-      AmazonS3Util.removeFolder(uploadDir);
-      AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
+      FileUploadUtil.cleanDir(uploadDir);
+      FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 
     if (!Helper.pEnumContains(productDto.getStatus().toString())) {
@@ -163,7 +164,7 @@ public class ProductController {
           HttpStatus.BAD_REQUEST);
     }
     String addressDir = "product-images/" + productId;
-    AmazonS3Util.removeFolder(addressDir);
+    FileUploadUtil.cleanDir(addressDir);
     productService.delete(product);
     return new ResponseEntity<>(new ApiResponse(true, "xóa thành công"), HttpStatus.OK);
   }

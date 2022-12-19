@@ -24,7 +24,7 @@ public class WebImage {
   private String category;
 
   @Column(name = "active")
-  private boolean active=true;
+  private boolean active = true;
 
   public WebImage() {
   }
@@ -65,13 +65,11 @@ public class WebImage {
     this.active = active;
   }
 
-
-
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return Constants.S3_BASE_URI + "/default-images/default-user.png";
+      return "/default-images/default-user.png";
     }
-    return Constants.S3_BASE_URI + "/web-images/" + this.id + "/" + this.image;
+    return "http://localhost:8082/web-images/" + this.id + "/" + this.image;
   }
 }
