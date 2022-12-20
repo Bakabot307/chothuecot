@@ -31,9 +31,9 @@ public class JwtTokenUtil {
     public String generateAccessToken(User user) {
 
         return Jwts.builder()
-                .setSubject(String.format("%s", user.getEmail()))
+                .setSubject(String.format("%s,%s", user.getId(), user.getEmail()))
                 .setIssuer("cot")
-            .claim("id", user.getId())
+                .claim("id", user.getId())
                 .claim("roles", user.getRoles().toString())
                 .claim("firstName", user.getFirstName())
                 .claim("lastName",user.getLastName())
