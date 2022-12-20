@@ -65,6 +65,9 @@ public class Product {
 
   @Column(name = "number", nullable = false)
   private Double number;
+
+  @Column(name = "enabled", nullable = false)
+  private boolean enabled=true;
   @ManyToOne
   @JoinColumn(name = "address_id")
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -195,6 +198,14 @@ public class Product {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 
   public String getName() {
@@ -336,7 +347,7 @@ public class Product {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return "http://localhost:8082/default-images/default-product.png";
+      return "http://localhost:8082/product-images/default-product.png";
     }
     return "http://localhost:8082/product-images/" + this.id + "/" + this.image;
   }

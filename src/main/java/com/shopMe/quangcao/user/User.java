@@ -291,7 +291,7 @@ public class User implements UserDetails {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || avatar == null) {
-      return "http://localhost:8082/default-images/default-user.png";
+      return "http://localhost:8082/user-photos/default-user.png";
     }
     return "http://localhost:8082/user-photos/" + this.id + "/" + this.avatar;
   }
