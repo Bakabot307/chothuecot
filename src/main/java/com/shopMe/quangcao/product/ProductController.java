@@ -129,7 +129,7 @@ public class ProductController {
 
     productDB = productDB.copyUpdate(productDto);
     productDB.setNumber(random);
-    Category category = categoryService.getById(productDB.getCategory().getId());
+    Category category = categoryService.getById(productDto.getCategoryId());
     productDB.setCategory(category);
 
     Address address = addressService.getById(productDto.getAddressId());
