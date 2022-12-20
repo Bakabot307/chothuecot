@@ -77,11 +77,14 @@ public class AddressController {
   @PostMapping("/admin/address/add")
   public ResponseEntity<ApiResponse> add(@Valid AddAddressDto addressDto,
       MultipartFile multipartFile) throws IOException {
-
+    if (multipartFile == null) {
+      return new ResponseEntity<>(new ApiResponse(false, "Hình ảnh không được để trống"),
+          HttpStatus.BAD_REQUEST);
+    }
     Address newAddress = new Address(addressDto);
     Address savedAddress = addressService.save(newAddress);
 
-    if (multipartFile != null && !multipartFile.isEmpty()) {
+    if (!multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       savedAddress.setImage(fileName);
@@ -122,7 +125,7 @@ public class AddressController {
   public ResponseEntity<ApiResponse> delete(@RequestParam("id") Integer id)
       throws AddressNotExistException {
     String addressDir = "address-images/" + id;
-    FileUploadUtil.cleanDir(addressDir);
+    FileUploadUtil.removeDir(addressDir);
     addressService.delete(id);
     return new ResponseEntity<>(new ApiResponse(true, "Đã xóa thành công"), HttpStatus.CREATED);
   }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shopMe.quangcao.address.Address;
 import com.shopMe.quangcao.address.AddressPoint.AddressPoint;
+import com.shopMe.quangcao.cartItem.CartItem;
 import com.shopMe.quangcao.category.Category;
 import com.shopMe.quangcao.orderDetail.OrderDetail;
 import com.shopMe.quangcao.product.dto.AddProductDto;
@@ -73,6 +74,11 @@ public class Product {
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  private Set<CartItem> cartItem;
+
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -240,6 +246,14 @@ public class Product {
     this.price = price;
   }
 
+  public Set<CartItem> getCartItem() {
+    return cartItem;
+  }
+
+  public void setCartItem(Set<CartItem> cartItem) {
+    this.cartItem = cartItem;
+  }
+
   public ProductStatus getStatus() {
     if (showOrderDetail() == null) {
       return status = ProductStatus.AVAILABLE;
@@ -322,7 +336,7 @@ public class Product {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return "/default-images/default-user.png";
+      return "http://localhost:8082/default-images/default-product.png";
     }
     return "http://localhost:8082/product-images/" + this.id + "/" + this.image;
   }

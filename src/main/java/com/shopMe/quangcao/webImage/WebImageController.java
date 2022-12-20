@@ -57,9 +57,13 @@ public class WebImageController {
   public ResponseEntity<ApiResponse> updateImage(@PathVariable("id") Integer id,
       @RequestParam boolean active,
       MultipartFile image) throws IOException, WebImageException {
+    if (image == null) {
+      return new ResponseEntity<>(new ApiResponse(false, "Hình ảnh không được để trống"),
+          HttpStatus.BAD_REQUEST);
+    }
     WebImage wI = webImageService.getById(id);
 
-    if (image != null && !image.isEmpty()) {
+    if (!image.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(image.getOriginalFilename()));
       wI.setImage(fileName);
@@ -77,7 +81,7 @@ public class WebImageController {
       throws IOException, WebImageException {
     WebImage wI = webImageService.getById(id);
     String addressDir = "web-images/" + wI.getId();
-    FileUploadUtil.cleanDir(addressDir);
+    FileUploadUtil.removeDir(addressDir);
     webImageService.delete(wI);
     return ResponseEntity.ok(new ApiResponse(true, "Xóa hình ảnh thành công"));
   }

@@ -25,4 +25,9 @@ public interface AddressRepository extends PagingAndSortingRepository<Address, I
       + "size(a.addressPoints)>1 "
   )
   List<Address> findAllBySize();
+
+
+  @Query("SELECT a FROM Address a WHERE a.street LIKE %?1% " +
+      "AND a.city LIKE %?2%")
+  Address findByName(String street, String city);
 }

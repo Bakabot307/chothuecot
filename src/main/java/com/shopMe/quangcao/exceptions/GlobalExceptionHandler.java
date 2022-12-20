@@ -60,4 +60,12 @@ public class GlobalExceptionHandler {
       Exception exception) {
     return new ErrorInfo(request, exception);
   }
+
+  @ExceptionHandler(value = ProductExistedException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorInfo ProductNotExistException(
+      HttpServletRequest request, HttpServletResponse response,
+      Exception exception) {
+    return new ErrorInfo(request, exception);
+  }
 }

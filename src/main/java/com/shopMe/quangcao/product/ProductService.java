@@ -1,5 +1,7 @@
 package com.shopMe.quangcao.product;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 import com.google.common.collect.Lists;
 import com.shopMe.quangcao.address.Address;
 import com.shopMe.quangcao.address.AddressRepository;
@@ -7,6 +9,7 @@ import com.shopMe.quangcao.cartItem.CartItem;
 import com.shopMe.quangcao.cartItem.CartItemService;
 import com.shopMe.quangcao.category.Category;
 import com.shopMe.quangcao.category.CategoryService;
+import com.shopMe.quangcao.exceptions.ProductExistedException;
 import com.shopMe.quangcao.orderDetail.OrderDetailRepository;
 import com.shopMe.quangcao.product.dto.AProductDto;
 import com.shopMe.quangcao.product.dto.CategoryDto;
@@ -61,10 +64,19 @@ public class ProductService {
   public ProductService() {
   }
 
-  public Product save(Product product) {
+  public Product saveAndCheckExisting(Product product) throws ProductExistedException {
+    if(existsByName(product.getName())) {
+      throw new ProductExistedException("Trụ với tên " + product.getName() + " đã tồn tại");
+    }
     return productRepository.save(product);
   }
+  public void save(Product product) {
+     productRepository.save(product);
+  }
 
+  public boolean existsByName(String name) {
+    return productRepository.findByName(name) != null;
+  }
   public void delete(Product product) {
     productRepository.delete(product);
   }

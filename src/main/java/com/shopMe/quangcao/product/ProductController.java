@@ -6,6 +6,7 @@ import com.shopMe.quangcao.address.AddressService;
 import com.shopMe.quangcao.amazon.AmazonS3Util;
 import com.shopMe.quangcao.category.Category;
 import com.shopMe.quangcao.category.CategoryService;
+import com.shopMe.quangcao.exceptions.ProductExistedException;
 import com.shopMe.quangcao.product.dto.AProductDto;
 import com.shopMe.quangcao.product.dto.AddProductDto;
 import com.shopMe.quangcao.product.dto.CategoryDto;
@@ -77,7 +78,11 @@ public class ProductController {
   @PostMapping("/product/add")
   public ResponseEntity<ApiResponse> add(@Valid AddProductDto productDto,
       MultipartFile multipartFile)
-      throws AddressNotExistException, CategoryNotFoundException, IOException {
+      throws AddressNotExistException, CategoryNotFoundException, IOException, ProductExistedException {
+    if (multipartFile == null) {
+      return new ResponseEntity<>(new ApiResponse(false, "Hình ảnh không được để trống"),
+          HttpStatus.BAD_REQUEST);
+    }
     Product product = new Product(productDto);
     Address address = addressService.getById(productDto.getAddressId());
     Category category = categoryService.getById(productDto.getCategoryId());
@@ -88,30 +93,26 @@ public class ProductController {
     double random = productDto.getNum1() + Math.random() * (productDto.getNum2()
         - productDto.getNum1());
     product.setNumber(random);
-
-    Product savedProduct = productService.save(product);
-
-    if (multipartFile == null) {
-      return new ResponseEntity<>(new ApiResponse(false, "Hình ảnh không được để trống"),
-          HttpStatus.BAD_REQUEST);
+    Product savedProduct = null;
+    try {
+      savedProduct = productService.saveAndCheckExisting(product);
+    } catch (ProductExistedException e) {
+      return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     if (!multipartFile.isEmpty()) {
       String fileName = StringUtils.cleanPath(
           Objects.requireNonNull(multipartFile.getOriginalFilename()));
       savedProduct.setImage(fileName);
-
       String uploadDir = "product-images/" + savedProduct.getId();
-
       FileUploadUtil.cleanDir(uploadDir);
       FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     } else {
       if (savedProduct.getImage().isEmpty()) {
         savedProduct.setImage(null);
-
       }
     }
     productService.save(savedProduct);
-    return new ResponseEntity<>(new ApiResponse(true, "added successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(new ApiResponse(true, "Đã thêm thành công"), HttpStatus.CREATED);
   }
 
   @PutMapping("/product/update")
@@ -164,7 +165,7 @@ public class ProductController {
           HttpStatus.BAD_REQUEST);
     }
     String addressDir = "product-images/" + productId;
-    FileUploadUtil.cleanDir(addressDir);
+    FileUploadUtil.removeDir(addressDir);
     productService.delete(product);
     return new ResponseEntity<>(new ApiResponse(true, "xóa thành công"), HttpStatus.OK);
   }

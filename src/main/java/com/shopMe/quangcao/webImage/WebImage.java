@@ -68,7 +68,7 @@ public class WebImage {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return "/default-images/default-user.png";
+      return "http://localhost:8082/default-images/default-web-image.png";
     }
     return "http://localhost:8082/web-images/" + this.id + "/" + this.image;
   }

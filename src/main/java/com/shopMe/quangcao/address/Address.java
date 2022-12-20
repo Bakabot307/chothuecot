@@ -112,7 +112,7 @@ public class Address {
   @Transient
   public String getPhotosImagePath() {
     if (id == null || image == null) {
-      return "/default-images/default-user.png";
+      return "http://localhost:8082/default-images/default-address.png";
     }
     return "http://localhost:8082/address-images/" + this.id + "/" + this.image;
   }

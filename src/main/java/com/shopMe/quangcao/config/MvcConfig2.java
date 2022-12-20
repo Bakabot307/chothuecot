@@ -15,11 +15,17 @@ public class MvcConfig2 implements WebMvcConfigurer {
         String dirName = "web-images";
         String productName = "product-images";
         String addressName = "address-images";
+        String userName = "user-images";
 
         Path userPhotosDir = Paths.get(dirName);
         String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
         registry.addResourceHandler("/" + dirName + "/**")
                 .addResourceLocations("file:/" + userPhotosPath + "/");
+
+        Path avatarDir = Paths.get(userName);
+        String avatarPhotosPath = avatarDir.toFile().getAbsolutePath();
+        registry.addResourceHandler("/" + userName + "/**")
+            .addResourceLocations("file:/" + avatarPhotosPath + "/");
 
 
         Path pathPrd = Paths.get(productName);
