@@ -78,7 +78,7 @@ public class Product {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonIgnore
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
   private Set<CartItem> cartItem;
 
