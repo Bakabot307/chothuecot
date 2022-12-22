@@ -96,7 +96,6 @@ public class OverviewService {
           .filter(
               order -> order.getStatus() == OrderStatus.PAID
                   )
-          .limit(number)
           .sorted(Comparator.comparing(Order::getConfirmedTime).reversed())
           .collect(Collectors.groupingBy(
                   o -> YearMonth.from(
@@ -112,7 +111,6 @@ public class OverviewService {
           .filter(
               order -> order.getStatus() == OrderStatus.PAID
                  )
-          .limit(number)
           .sorted(Comparator.comparing(Order::getConfirmedTime).reversed())
           .collect(Collectors.groupingBy(
                   o -> o.getConfirmedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
@@ -218,7 +216,6 @@ public class OverviewService {
         .filter(orderDetail -> orderDetail.getExpiredDate() != null
             && orderDetail.getStartDate() != null)
         .filter(orderDetail -> orderDetail.getOrders().getConfirmedTime() != null)
-        .limit(number)
         .sorted(Comparator.comparing(OrderDetail::getStartDate).reversed())
         .collect(Collectors.groupingBy(
             orderDetail -> YearMonth.from(
